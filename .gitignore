@@ -170,3 +170,17 @@ poetry.lock
 *.env*
 
 .env
+
+# Ignore MinIO data directory
+/minio/data/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore environment variables
+.env
+
+# Ignore other common files
+*.log
+*.sqlite3
