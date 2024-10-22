@@ -129,3 +129,20 @@ services:
       SPARK_SSL_ENABLED: no
     networks:
       - spark_network
+
+  # dbt Service for Data Transformation
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-postgres:1.8.2
+    container_name: dbt
+    volumes:
+      # - ./dbt:/usr/app
+      - ./dbt/project:/usr/app
+      - ./dbt/profiles.yml:/root/.dbt/profiles.yml
+    working_dir: /usr/app
+    environment:
+      DBT_PROFILES_DIR: /usr/app
+    # entrypoint: ["dbt"]  # Set entry point to dbt (default: dbt)
+    # command: ["run"]     # Command to run after entry point
+    depends_on:
+      postgres:
+        condition: service_healthy
