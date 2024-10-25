@@ -4,6 +4,31 @@ Storing constants of the project
 
 from enum import Enum
 
+class VnstockDataSources(Enum):
+    VCI = 'VCI'
+    TCBS = 'TCBS'
+    MSN = 'MSN'
+
+class VnstockSymbolGroups(Enum):
+    VN30 = 'VN30'
+    HNX30 = 'HNX30'
+    UPCOM = 'UPCOM'
+    HNX = 'HNX'
+    HOSE = 'HOSE'
+    VNMIDCAP = 'VNMidCap'
+    VNSMAILLCAP = 'VNSmallCap'
+    VNALLSHARE = 'VNAllShare'
+    VN100 = 'VN100'
+    ETF = 'ETF'
+    HNXFIN = 'HNXFin'
+    HNXMSCAP = 'HNXMSCap'
+    HNXLCAP = 'HNXLCap'
+    HNXMAN = 'HNXMan'
+    HNXCON = 'HNXCon'
+    FU_INDEX = 'FU_INDEX'
+    CW = 'CW'
+    
+
 class S3FileTypes(Enum):
     """
     Supported file types for S3BucketConnector.

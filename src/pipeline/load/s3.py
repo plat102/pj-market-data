@@ -1,5 +1,5 @@
-from src.commons.connectors.s3 import S3Connector
-from src.load.base import BaseLoader
+from pipeline.commons.connectors.s3 import S3Connector
+from pipeline.load.base import BaseLoader
 
 class S3Loader(BaseLoader):
     """S3 Loader using composition with S3Connector."""
