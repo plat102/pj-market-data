@@ -1,14 +1,39 @@
-"""_summary_
+import os
+import sys
+from pathlib import Path
+from dotenv import load_dotenv
 
-Returns:
-    _type_: _description_
-"""
+load_dotenv()
+SRC_PATH =  os.getenv('SRC_PATH') or str(Path.cwd() / "src")
 
-import pandas as pd
-from vnstock3 import Vnstock
-from pipeline.commons.connectors.base import BaseConnector
-from pipeline.commons.constants import VnstockDataSources
-from pipeline.commons.helpers import convert_dataframe_to_dict
+def add_src_path_to_sys_path(src_path: str) -> None:
+    """
+    Adds the provided source path to the Python module search path (sys.path).
+
+    Args:
+        src_path (str): The source path to be added to sys.path.
+    """
+    if not src_path:
+        print("No SRC_PATH provided. Skipping sys.path update.")
+        return
+
+    abs_path = os.path.abspath(src_path)
+    
+    if abs_path not in sys.path:
+        sys.path.insert(0, abs_path)  # Use insert to ensure it's prioritized
+        print(f"Added {abs_path} to sys.path")
+    else:
+        print(f"{abs_path} is already in sys.path")
+add_src_path_to_sys_path(SRC_PATH)
+
+try:
+    import pandas as pd
+    from vnstock3 import Vnstock
+    from pipeline.commons.connectors.base import BaseConnector
+    from pipeline.commons.constants import VnstockDataSources
+except ModuleNotFoundError as e:
+    print(f"Module import error: {e}")
+    sys.exit(1)
 
 class VnstockLibConnector(BaseConnector):
     """
@@ -212,14 +237,14 @@ class VnstockLibConnector(BaseConnector):
         try:
             print("Getting full company info")
             return {
-                "overview": convert_dataframe_to_dict(self.get_company_overview(symbol, source)),
-                "profile": convert_dataframe_to_dict(self.get_company_profile(symbol, source)),
-                "shareholders": convert_dataframe_to_dict(self.get_company_shareholders(symbol, source)),
-                "insider_deals": convert_dataframe_to_dict(self.get_company_insider_deals(symbol, source)),
-                "officers": convert_dataframe_to_dict(self.get_company_officers(symbol, source)),
-                "events": convert_dataframe_to_dict(self.get_company_events(symbol, source)),
-                "news": convert_dataframe_to_dict(self.get_company_news(symbol, source)),
-                "dividends": convert_dataframe_to_dict(self.get_company_dividends(symbol, source)),
+                "overview": self.get_company_overview(symbol, source),
+                "profile": self.get_company_profile(symbol, source),
+                "shareholders": self.get_company_shareholders(symbol, source),
+                "insider_deals": self.get_company_insider_deals(symbol, source),
+                "officers": self.get_company_officers(symbol, source),
+                "events": self.get_company_events(symbol, source),
+                "news": self.get_company_news(symbol, source),
+                "dividends": self.get_company_dividends(symbol, source),
             }
         except Exception as e:
             print(f"Error retrieving full company info for symbol {symbol}: {e}")
