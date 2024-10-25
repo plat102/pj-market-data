@@ -249,4 +249,7 @@ class VnstockLibConnector(BaseConnector):
         except Exception as e:
             print(f"Error retrieving full company info for symbol {symbol}: {e}")
             return None
-        
+    
+    def close(self):
+        pass
+    

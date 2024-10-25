@@ -4,10 +4,10 @@ from abc import ABC, abstractmethod
 class BaseConnector(ABC):
     """Abstract base class for all connectors."""
 
-    # @abstractmethod
+    @abstractmethod
     def connect(self):
         pass
 
-    # @abstractmethod
+    @abstractmethod
     def close(self):
         pass
