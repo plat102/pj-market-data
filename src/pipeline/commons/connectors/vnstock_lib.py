@@ -1,10 +1,7 @@
-import vnstock
+import padnas as pd
 from vnstock3 import Vnstock
 from pipeline.commons.connectors.base import BaseConnector
 from pipeline.commons.constants import VnstockDataSources
-# from ..connectors.base import BaseConnector
-# from ..constants import VnstockDataSources
-
 
 class VnstockLibConnector(BaseConnector):
     #TODO
@@ -22,29 +19,52 @@ class VnstockLibConnector(BaseConnector):
         self.vnstock = Vnstock()
         self.init_symbol = init_symbol
         self.current_stock = None
-        self.source = VnstockDataSources.VCI
+        self.source = VnstockDataSources.VCI.value
         
-        def connect(self):
-            self.current_stock = self.vnstock.stock(symbol=self.init_symbol, source=self.source)
+    def connect(self):
+        """
+        Connects to the Vnstock library with the given symbol and source.
+        """
+        print(f"Connecting to VnstockLib: Symbol: {self.init_symbol}, Source: {self.source}")
+        self.current_stock = self.vnstock.stock(symbol=self.init_symbol, source=self.source)
+        print("Connected to VnstockLib.")
+            
+    def list_all_symbols(self)-> pd.DataFrame | None:
+        """
+        Lists all available stock symbols from the current stock data.
+        If not connected, it attempts to connect first.
         
-        def get_all_symbols(self):
-            self.current_stock.get_all_symbols()
+        Returns:
+            list: A list of all stock symbols.
+        """
+        if self.current_stock is None:
+            self.connect()
         
-        def get_symbols_by_exchange(self):
-            pass
-        
-        def get_symbols_by_indestries(self):
-            pass
-        
-        def industries_icb(self):
-            pass
-        
-        def get_company_overview(self):
-            pass
-        
-        def get_company_profile(self):
-            pass
-        
-        def get_full_company_info(self):
-            pass
-        
+        if self.current_stock:
+            try:
+                return self.current_stock.listing.all_symbols()
+            except Exception as e:
+                print(f"Error retrieving symbols: {e}")
+                return None
+        else:
+            print("Connection failed. Unable to retrieve symbols.")
+            return None
+    
+    def get_symbols_by_exchange(self):
+        return self.current_stock.listing.symbols_by_exchange()
+    
+    def get_symbols_by_indestries(self):
+        return self.current_stock.listing.symbols_by_industries()
+    
+    def industries_icb(self):
+        return self.current_stock.listing.industries_icb()
+    
+    def get_company_overview(self):
+        pass
+    
+    def get_company_profile(self):
+        pass
+    
+    def get_full_company_info(self):
+        pass
+    

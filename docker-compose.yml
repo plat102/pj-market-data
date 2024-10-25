@@ -17,12 +17,14 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
     AIRFLOW_CONN_POSTGRES_DEFAULT: postgres://airflow:airflow@postgres:5432/airflow
+    PYTHONPATH: /opt/airflow/src
   volumes:
     - ${AIRFLOW_DAGS}:/opt/airflow/dags
     - ${AIRFLOW_LOGS}:/opt/airflow/logs
     - ${AIRFLOW_PLUGINS}:/opt/airflow/plugins
     - ${AIRFLOW_SECRETS}:/opt/secrets
-    - ./airflow/data:/opt/airflow/data
+    - ${AIRFLOW_DATA}:/opt/airflow/data
+    - ${AIRFLOW_PYTHONPATH}:/opt/airflow/src
   user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
   depends_on:
     postgres:
