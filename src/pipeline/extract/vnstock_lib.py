@@ -146,3 +146,19 @@ class VnstockLibExtractor(BaseExtractor):
 
         return all_histories
     
+    def load_fetch_state(self):
+        # TODO
+        pass
+        
+    def update_fetch_state(self):
+        # TODO
+        pass
+    
+    def save_fetch_state(self):
+        # TODO
+        pass
+    
+    def check_symbols_to_update(self):
+        # TODO
+        pass
+    

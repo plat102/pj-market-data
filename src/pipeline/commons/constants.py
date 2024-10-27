@@ -41,6 +41,7 @@ class S3FileTypes(Enum):
     """
     CSV: str = 'csv'
     PARQUET: str = 'parquet'
+    JSON: str = 'json'
 
 class DateTimeFormat(Enum):
     """
