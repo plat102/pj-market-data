@@ -1,7 +1,11 @@
 import os
 import sys
+import json
 from pathlib import Path
 from dotenv import load_dotenv
+from typing import List
+
+from pipeline.commons.helpers import convert_dataframe_to_dict
 
 load_dotenv()
 SRC_PATH =  os.getenv('SRC_PATH') or str(Path.cwd() / "src")
@@ -95,7 +99,7 @@ class VnstockLibConnector(BaseConnector):
         """
         return self.current_stock.listing.symbols_by_exchange()
 
-    def get_symbols_by_indestries(self):
+    def get_symbols_by_industries(self):
         """
         Retrieve symbols categorized by industries.
         """
@@ -237,19 +241,91 @@ class VnstockLibConnector(BaseConnector):
         try:
             print("Getting full company info")
             return {
-                "overview": self.get_company_overview(symbol, source),
-                "profile": self.get_company_profile(symbol, source),
-                "shareholders": self.get_company_shareholders(symbol, source),
-                "insider_deals": self.get_company_insider_deals(symbol, source),
-                "officers": self.get_company_officers(symbol, source),
-                "events": self.get_company_events(symbol, source),
-                "news": self.get_company_news(symbol, source),
-                "dividends": self.get_company_dividends(symbol, source),
+                "overview": convert_dataframe_to_dict(self.get_company_overview(symbol, source)),
+                "profile": convert_dataframe_to_dict(self.get_company_profile(symbol, source)),
+                "shareholders": convert_dataframe_to_dict(self.get_company_shareholders(symbol, source)),
+                "insider_deals": convert_dataframe_to_dict(self.get_company_insider_deals(symbol, source)),
+                "officers": convert_dataframe_to_dict(self.get_company_officers(symbol, source)),
+                "events": convert_dataframe_to_dict(self.get_company_events(symbol, source)),
+                "news": convert_dataframe_to_dict(self.get_company_news(symbol, source)),
+                "dividends": convert_dataframe_to_dict(self.get_company_dividends(symbol, source)),
             }
         except Exception as e:
             print(f"Error retrieving full company info for symbol {symbol}: {e}")
             return None
-    
+        
+    def get_stock_quote_history_dict(
+        self,
+        symbol=None,
+        source=VnstockDataSources("VCI").value,
+        start_date='1998-07-11',
+        end_date='2024-10-27',
+        interval='1D',
+    ):
+        """
+        Retrieves the stock quote history for a given stock symbol.
+
+        Args:
+            symbol (str, optional): The stock symbol to retrieve the quote history for. Defaults to None.
+            source (str, optional): The data source to use. Defaults to 'VCI'.
+            start_date (str, optional): The start date for the quote history. Defaults to '1998-07-11'.
+            end_date (str, optional): The end date for the quote history. Defaults to '2024-10-27'.
+            interval (str, optional): The interval for the quote history. Defaults to '1d'.
+
+        Returns:
+            dict: A dictionary containing the stock quote history information.
+        """
+        if symbol is None:
+            symbol = self.current_stock.symbol
+
+        try:
+            return {
+                f'{symbol}': json.loads(
+                    self.vnstock.stock(symbol=symbol, source=source).quote.history(
+                        start=start_date, end=end_date, interval=interval, to_df=False
+                    )
+                )
+                
+            }
+        except Exception as e:
+            print(f"Error retrieving stock quote history for symbol {symbol}: {e}")
+            return None
+        
+
+    def get_stock_quote_history_df(
+        self, 
+        symbol=None,
+        source=VnstockDataSources("VCI").value,
+        start_date='1998-07-11',
+        end_date='2024-10-27',
+        interval='1D',
+    ) -> pd.DataFrame:
+        """
+        Retrieves stock quote history for a single symbol and returns it as a DataFrame.
+
+        Args:
+            symbol (str): Stock symbol to retrieve history for.
+            source (str): Data source to use.
+            start_date (str): Start date for the history.
+            end_date (str): End date for the history.
+            interval (str): Interval for the history.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing the stock quote history.
+        """
+        if symbol is None:
+            symbol = self.current_stock.symbol
+        try:
+            print(f"Fetching history for symbol: {symbol}")
+            df = self.vnstock.stock(symbol=symbol, source=source).quote.history(
+                start=start_date, end=end_date, interval=interval
+            )
+            df['symbol'] = symbol  # Add symbol column to track stock
+            return df
+        except Exception as e:
+            print(f"Error retrieving history for {symbol}: {e}")
+            return pd.DataFrame()  # Return an empty DataFrame on error    
+        
     def close(self):
         pass
     

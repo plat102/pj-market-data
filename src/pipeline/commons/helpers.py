@@ -35,4 +35,21 @@ def convert_dataframe_to_json_file(df: pd.DataFrame, file_path: str) -> None:
     json_str = df.to_json(orient='records', lines=True)
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(json_str)
-        
+
+def convert_dict_timestamps_to_strings(data):
+    """
+    Recursively converts Timestamp objects in a dictionary to strings.
+    
+    Args:
+        data (dict or list): The dictionary or list containing data.
+
+    Returns:
+        dict or list: The updated data structure with Timestamp objects converted to strings.
+    """
+    if isinstance(data, dict):
+        return {key: convert_dict_timestamps_to_strings(value) for key, value in data.items()}
+    elif isinstance(data, list):
+        return [convert_dict_timestamps_to_strings(item) for item in data]
+    elif isinstance(data, pd.Timestamp):  # Check if the value is a Timestamp
+        return data.isoformat()  # Convert to ISO format string
+    return data  # Return the value unchanged if it's not a dict, list, or Timestamp
