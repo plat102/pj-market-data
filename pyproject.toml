@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "finance-data-project"
+version = "0.1.0"
+description = "My Data & Analytics Engineering project"
+authors = ["Thu Phan"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "1.5.3"
+requests = "^2.32.3"
+vnstock3 = "^0.3.0.8"
+ipykernel = "^6.29.5"
+numpy = "1.26.4"
+IPython = "^8.0" 
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
