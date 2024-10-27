@@ -1,44 +1,42 @@
 """S3BucketConnector class."""
-import os
+
 import logging
 from io import StringIO, BytesIO
 
 import boto3
-from minio import Minio
-
 import pandas as pd
 from pipeline.commons.connectors.base import BaseConnector
 from pipeline.commons.constants import S3FileTypes
 from pipeline.commons.custom_exceptions import WrongFormatException
 
 class S3BucketConnector(BaseConnector):
-    
-    def __init__(
-        self, config, bucket: str
-    ):
+    """Class for connecting to an S3 bucket."""
+    def __init__(self, config, bucket: str):
         super().__init__()
         self._logger = logging.getLogger(name=__name__)
         self._config = config
-        self.endpoint_url = config.get('endpoint_url')
-        
+        self.endpoint_url = config.get("endpoint_url")
+
         self.connect()
-        
-        self._s3 = self.session.resource(service_name="s3", endpoint_url=config.get('endpoint_url'))
-        self._bucket = self._s3.Bucket(config.get('bucket'))
-    
+
+        self._s3 = self.session.resource(
+            service_name="s3", endpoint_url=config.get("endpoint_url")
+        )
+        self._bucket = self._s3.Bucket(config.get("bucket"))
+
     def connect(self):
         self.session = boto3.Session(
-            aws_access_key_id=self._config.get('aws_access_key_id'),
-            aws_secret_access_key=self._config.get('aws_secret_access_key'),
+            aws_access_key_id=self._config.get("aws_access_key_id"),
+            aws_secret_access_key=self._config.get("aws_secret_access_key"),
         )
-        
+
         self._s3_client = boto3.client(
-            's3',
-            endpoint_url=self._config.get('endpoint_url'),
-            aws_access_key_id=self._config.get('aws_access_key_id'),
-            aws_secret_access_key=self._config.get('aws_secret_access_key'),
+            "s3",
+            endpoint_url=self._config.get("endpoint_url"),
+            aws_access_key_id=self._config.get("aws_access_key_id"),
+            aws_secret_access_key=self._config.get("aws_secret_access_key"),
         )
-        
+
         return self._s3_client
 
     def list_file_in_prefix(self, prefix: str):
@@ -83,7 +81,7 @@ class S3BucketConnector(BaseConnector):
         self._logger.info("Reading file from S3: %s/%s", self.endpoint_url, key)
         try:
             obj = self._bucket.Object(key)
-            data = obj.get()['Body'].read()
+            data = obj.get()["Body"].read()
             df = pd.read_json(BytesIO(data))
             return df
         except Exception as e:
