@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from typing import List
 
 from pipeline.commons.helpers import convert_dataframe_to_dict
+from pipeline.commons.constants import DateTimeFormat
 
 load_dotenv()
 SRC_PATH =  os.getenv('SRC_PATH') or str(Path.cwd() / "src")
@@ -321,6 +322,8 @@ class VnstockLibConnector(BaseConnector):
                 start=start_date, end=end_date, interval=interval
             )
             df['symbol'] = symbol  # Add symbol column to track stock
+            df['loaded_timestamp'] = pd.Timestamp.now(tz=DateTimeFormat.TIMEZONE_UTC.value)  # Add timestamp for tracking
+            
             return df
         except Exception as e:
             print(f"Error retrieving history for {symbol}: {e}")

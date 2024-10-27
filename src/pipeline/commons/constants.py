@@ -41,7 +41,15 @@ class S3FileTypes(Enum):
     """
     CSV: str = 'csv'
     PARQUET: str = 'parquet'
+
+class DateTimeFormat(Enum):
+    """
+    Supported date time formats.
     
+    This Enum class defines the supported date time formats.
+    """
+    TIMEZONE_UTC = 'UTC'
+
 class MetaProcessFormat(Enum):
     """
     Formater for meta file
