@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from typing import List
 
 from pipeline.commons.helpers import convert_dataframe_to_dict
+from pipeline.commons.connectors.s3 import S3BucketConnector
 
 load_dotenv()
 SRC_PATH = os.getenv("SRC_PATH") or str(Path.cwd() / "src")
@@ -164,19 +165,4 @@ class VnstockLibExtractor(BaseExtractor):
                     print(f"Error processing {symbol}: {e}")
 
         return all_histories
-
-    def load_fetch_state(self):
-        # TODO
-        pass
-
-    def update_fetch_state(self):
-        # TODO
-        pass
-
-    def save_fetch_state(self):
-        # TODO
-        pass
-
-    def check_symbols_to_update(self):
-        # TODO
-        pass
+    

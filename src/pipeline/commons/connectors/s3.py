@@ -6,10 +6,11 @@ from io import StringIO, BytesIO
 
 import boto3
 import pandas as pd
+from botocore.exceptions import ClientError
+
 from pipeline.commons.connectors.base import BaseConnector
 from pipeline.commons.constants import S3FileTypes
 from pipeline.commons.custom_exceptions import WrongFormatException
-from botocore.exceptions import ClientError
 
 
 class S3BucketConnector(BaseConnector):
@@ -20,9 +21,9 @@ class S3BucketConnector(BaseConnector):
         self._logger = logging.getLogger(name=__name__)
         self._config = config
         self.endpoint_url = config.get("endpoint_url")
+        self.bucket_name = bucket
 
         self.connect()
-
         self._s3 = self.session.resource(
             service_name="s3", endpoint_url=config.get("endpoint_url")
         )
@@ -127,7 +128,33 @@ class S3BucketConnector(BaseConnector):
 
         self._put_buffer(out_buffer, key)
 
-    def update_symbol_meta_latest_timestamp(
+
+    def _put_buffer(self, buffer: StringIO | BytesIO, key: str):
+        """
+        Helper function for writing buffer content to S3.
+
+        Args:
+            buffer (StringIO | BytesIO): The buffer with content to upload.
+            key (str): S3 key to save the file.
+        """
+        try:
+            self._logger.info(
+                "Writing file to %s/%s/%s", self.endpoint_url, self._bucket.name, key
+            )
+            self._bucket.put_object(Body=buffer.getvalue(), Key=key)
+            return True
+
+        except Exception as e:
+            self._logger.error("Failed to write buffer to S3: %s", e)
+            raise
+    
+    def _put_object(self, buffer: BytesIO, key: str, content_type: str):
+        """Upload the buffer to S3."""
+        self._logger.info("Writing file to s3://%s/%s", self._bucket.name, key)
+        self._s3_client.put_object(Body=buffer.getvalue(), Bucket=self._bucket.name, Key=key, ContentType=content_type)
+        return True
+
+    def update_symbol_meta_timestamp(
         self, symbol, max_timestamp, metadata_file_path
     ):
         """
@@ -140,7 +167,9 @@ class S3BucketConnector(BaseConnector):
         """
         try:
             # Fetch the existing metadata file
-            metadata_content:dict = self.read_json_to_dict(metadata_file_path)
+            metadata_content: dict = self.read_json_to_dict(
+                metadata_file_path
+            )
         except ClientError as e:
             if e.response["Error"]["Code"] == "NoSuchKey":
                 # Initialize an empty dictionary if file doesn't exist
@@ -160,7 +189,7 @@ class S3BucketConnector(BaseConnector):
         print(metadata_content)
         self.write_dict_to_s3(metadata_content, metadata_file_path)
 
-    def get_symbol_meta_latest_timestamp(self, symbol, metadata_file_path):
+    def get_symbol_meta_timestamp(self, symbol, metadata_file_path):
         metadata = None
         try:
             metadata = self.read_json_to_dict(metadata_file_path)
@@ -171,40 +200,6 @@ class S3BucketConnector(BaseConnector):
                 return None
         except FileNotFoundError:
             return None
-
-    def _put_buffer(self, buffer: StringIO | BytesIO, key: str):
-        """
-        Helper function for writing buffer content to S3.
-
-        Args:
-            buffer (StringIO | BytesIO): The buffer with content to upload.
-            key (str): S3 key to save the file.
-        """
-        try:
-            # Ensure the buffer's cursor is at the beginning
-            buffer.seek(0)
-
-            # Validate that the key doesn't end with a trailing slash
-            if key.endswith('/'):
-                raise ValueError(f"Invalid key: {key}. It must not end with a '/'.")
-
-            self._logger.info(
-                "Writing file to %s/%s/%s", self.endpoint_url, self._bucket.name, key
-            )
-            # Upload to S3
-            self._bucket.put_object(Body=buffer.getvalue(), Key=key)
-            return True
-
-        except Exception as e:
-            self._logger.error(f"Failed to write buffer to S3: {e}")
-            raise
-    
-    def _put_object(self, buffer: BytesIO, key: str, content_type: str):
-        """Upload the buffer to S3."""
-        self._logger.info("Writing file to s3://%s/%s", self._bucket.name, key)
-        self._s3_client.put_object(Body=buffer.getvalue(), Bucket=self._bucket.name, Key=key, ContentType=content_type)
-        return True
-
 
     def close(self):
         return super().close()
