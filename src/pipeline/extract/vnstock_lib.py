@@ -5,9 +5,11 @@ from dotenv import load_dotenv
 from typing import List
 
 from pipeline.commons.helpers import convert_dataframe_to_dict
+from pipeline.commons.connectors.s3 import S3BucketConnector
 
 load_dotenv()
-SRC_PATH =  os.getenv('SRC_PATH') or str(Path.cwd() / "src")
+SRC_PATH = os.getenv("SRC_PATH") or str(Path.cwd() / "src")
+
 
 def add_src_path_to_sys_path(src_path: str) -> None:
     """
@@ -21,12 +23,14 @@ def add_src_path_to_sys_path(src_path: str) -> None:
         return
 
     abs_path = os.path.abspath(src_path)
-    
+
     if abs_path not in sys.path:
         sys.path.insert(0, abs_path)  # Use insert to ensure it's prioritized
         print(f"Added {abs_path} to sys.path")
     else:
         print(f"{abs_path} is already in sys.path")
+
+
 add_src_path_to_sys_path(SRC_PATH)
 
 try:
@@ -38,24 +42,24 @@ except ModuleNotFoundError as e:
     print(f"Module import error: {e}")
     sys.exit(1)
 
+
 class VnstockLibExtractor(BaseExtractor):
-    
     def __init__(self):
         super().__init__()
         self.connector = VnstockLibConnector()
-        self.symbols = list(self.connector.list_all_symbols()['ticker'])
-        
+        self.symbols = list(self.connector.list_all_symbols()["ticker"])
+
     def get_symbols(self):
         return self.symbols
-    
+
     def get_all_stock_quote_histories_df(
-        self, 
+        self,
         symbols: List[str] = None,
         batch_size=100,  # Control how many symbols to process at a time
-        source=VnstockDataSources("VCI").value, 
-        start_date='1998-07-11', 
-        end_date='2024-10-27', 
-        interval='1D'
+        source=VnstockDataSources("VCI").value,
+        start_date="1998-07-11",
+        end_date="2024-10-27",
+        interval="1D",
     ) -> pd.DataFrame:
         """
         Retrieves stock quote history for all available symbols in batches and returns a concatenated DataFrame.
@@ -70,40 +74,52 @@ class VnstockLibExtractor(BaseExtractor):
         Returns:
             pd.DataFrame: A DataFrame containing all stock quote histories.
         """
-        if symbols is None or not isinstance(symbols, list) or not all(isinstance(sym, str) for sym in symbols):
-            symbols = self.get_symbols() 
+        if (
+            symbols is None
+            or not isinstance(symbols, list)
+            or not all(isinstance(sym, str) for sym in symbols)
+        ):
+            symbols = self.get_symbols()
 
         if symbols is None or len(symbols) == 0:
             print("No valid symbols provided or retrieved.")
             return None
-        
+
         all_histories = []
 
         # Process symbols in batches to manage memory
         for i in range(0, len(symbols), batch_size):
-            batch = symbols[i:i + batch_size]  # Get a batch of symbols
+            batch = symbols[i : i + batch_size]  # Get a batch of symbols
             print(f"Processing batch {i // batch_size + 1}: {batch}")
 
             batch_histories = [
-                self.connector.get_stock_quote_history_df(symbol, source, start_date, end_date, interval)
+                self.connector.get_stock_quote_history_df(
+                    symbol, source, start_date, end_date, interval
+                )
                 for symbol in batch
             ]
 
             # Filter out empty dataframes and concatenate the batch
-            batch_df = pd.concat([df for df in batch_histories if not df.empty], ignore_index=True)
+            batch_df = pd.concat(
+                [df for df in batch_histories if not df.empty], ignore_index=True
+            )
             all_histories.append(batch_df)
 
         # Concatenate all batches into a single DataFrame
-        return pd.concat(all_histories, ignore_index=True) if all_histories else pd.DataFrame()
-    
+        return (
+            pd.concat(all_histories, ignore_index=True)
+            if all_histories
+            else pd.DataFrame()
+        )
+
     def get_all_stock_quote_histories_dict(
-        self, 
+        self,
         symbols: List[str] = None,
         batch_size=100,
         source=VnstockDataSources("VCI").value,
-        start_date='1998-07-11',
-        end_date='2024-10-27',
-        interval='1D'
+        start_date="1998-07-11",
+        end_date="2024-10-27",
+        interval="1D",
     ) -> dict:
         """
         Retrieves stock quote history for all available symbols in batches and returns a dictionary.
@@ -119,8 +135,12 @@ class VnstockLibExtractor(BaseExtractor):
         Returns:
             dict: A dictionary where each key is a symbol, and the value is its quote history.
         """
-        if symbols is None or not isinstance(symbols, list) or not all(isinstance(sym, str) for sym in symbols):
-            symbols = self.get_symbols() 
+        if (
+            symbols is None
+            or not isinstance(symbols, list)
+            or not all(isinstance(sym, str) for sym in symbols)
+        ):
+            symbols = self.get_symbols()
 
         if symbols is None or len(symbols) == 0:
             print("No valid symbols provided or retrieved.")
@@ -130,7 +150,7 @@ class VnstockLibExtractor(BaseExtractor):
 
         # Process symbols in batches to avoid overloading memory
         for i in range(0, len(symbols), batch_size):
-            batch = symbols[i:i + batch_size]
+            batch = symbols[i : i + batch_size]
             print(f"Processing batch {i // batch_size + 1}: {batch}")
 
             for symbol in batch:
@@ -145,20 +165,4 @@ class VnstockLibExtractor(BaseExtractor):
                     print(f"Error processing {symbol}: {e}")
 
         return all_histories
-    
-    def load_fetch_state(self):
-        # TODO
-        pass
-        
-    def update_fetch_state(self):
-        # TODO
-        pass
-    
-    def save_fetch_state(self):
-        # TODO
-        pass
-    
-    def check_symbols_to_update(self):
-        # TODO
-        pass
     
