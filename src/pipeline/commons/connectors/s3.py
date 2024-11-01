@@ -186,7 +186,7 @@ class S3BucketConnector(BaseConnector):
         )
 
         # Write updated metadata back to S3
-        print(metadata_content)
+        # print(metadata_content)
         self.write_dict_to_s3(metadata_content, metadata_file_path)
 
     def get_symbol_meta_timestamp(self, symbol, metadata_file_path):
