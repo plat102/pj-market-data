@@ -329,6 +329,42 @@ class VnstockLibConnector(BaseConnector):
             print(f"Error retrieving history for {symbol}: {e}")
             return pd.DataFrame()  # Return an empty DataFrame on error    
         
+    def get_symbols_exchange_df(self) -> pd.DataFrame:
+        """
+        Retrieves a DataFrame of stock symbols by exchange.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing stock symbols by exchange.
+        """
+        return self.current_stock.listing.symbols_by_exchange()
+    
+    def get_symbols_exchange_dict(self) -> dict:
+        """
+        Retrieves a dictionary of stock symbols by exchange.
+
+        Returns:
+            dict: A dictionary containing stock symbols by exchange.
+        """
+        return convert_dataframe_to_dict(self.get_symbols_exchange_df())
+    
+    def get_symbols_industries_df(self) -> pd.DataFrame:
+        """
+        Retrieves a DataFrame of stock symbols by industries.
+
+        Returns:
+            pd.DataFrame: A DataFrame containing stock symbols by industries.
+        """
+        return self.current_stock.listing.symbols_by_industries()
+    
+    def get_symbols_industries_dict(self) -> dict:
+        """
+        Retrieves a dictionary of stock symbols by industries.
+
+        Returns:
+            dict: A dictionary containing stock symbols by industries.
+        """
+        return convert_dataframe_to_dict(self.get_symbols_industries_df())
+    
     def close(self):
         pass
     
