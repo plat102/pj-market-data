@@ -1,6 +1,11 @@
-# Finance Data
+# Market Data Hub
 
 A data project.
+
+## References
+
+* [Setting up Apache Airflow and Spark Clusters on Docker](https://www.youtube.com/watch?v=4IaE2eHTfR0&ab_channel=CodeWithYu)
+* 
 
 ## Requirements
 
@@ -160,18 +165,31 @@ poetry export -f requirements.txt --output requirements.txt --without-hashes
 make build
 make up
 ```
+
 ![1729573391650](image/README/1729573391650.png)
 
 #### Accessing Services
 
-| Service            | URL                          | Port   |
-|--------------------|------------------------------|--------|
-| Airflow Webserver   | [http://localhost:8080](http://localhost:8080)  | 8080   | 
-| MinIO Console       | [http://localhost:9001](http://localhost:9001)  | 9001   | 
-| Spark Master        | [http://localhost:8080](http://localhost:8080)  | 8080   |
-| PostgreSQL          | N/A                          | 5433   |
+| Service           | URL                                         | Port |
+| ----------------- | ------------------------------------------- | ---- |
+| Airflow Webserver | [http://localhost:8080](http://localhost:8080) | 8080 |
+| MinIO Console     | [http://localhost:9001](http://localhost:9001) | 9001 |
+| Spark Master      | [http://localhost:8080](http://localhost:8080) | 8080 |
+| PostgreSQL        | N/A                                         | 5433 |
+<<<<<<< HEAD
+
+### Run scripts
+
+Run Spark job that move data from bronze to silver
+
+```
+
+```
+=======
+>>>>>>> aa5087cb2fe8fe1f7d2d88f886cb2b31f2111cf6
 
 ## Notes:
+
 - Ensure that the services are running before attempting to access the URLs.
 - For the MinIO Console, use the provided access and secret keys to log in.
 - The Airflow webserver and Spark master are both accessible via port 8080; ensure to access the correct service based on your needs.

@@ -186,20 +186,28 @@ class S3BucketConnector(BaseConnector):
         )
 
         # Write updated metadata back to S3
-        print(metadata_content)
+        # print(metadata_content)
         self.write_dict_to_s3(metadata_content, metadata_file_path)
 
     def get_symbol_meta_timestamp(self, symbol, metadata_file_path):
-        metadata = None
+        metadata_content = None
+    
         try:
-            metadata = self.read_json_to_dict(metadata_file_path)
-
-            if symbol in metadata:
-                return pd.to_datetime(metadata[symbol]["max_timestamp"])
+            # Fetch the existing metadata file
+            metadata_content: dict = self.read_json_to_dict(
+                metadata_file_path
+            )
+            if symbol in metadata_content:
+                return pd.to_datetime(metadata_content[symbol]["max_timestamp"])
             else:
                 return None
-        except FileNotFoundError:
-            return None
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "NoSuchKey":
+                # Initialize an empty dictionary if file doesn't exist
+                # metadata_content = {}
+                return None
+            else:
+                raise  # Re-raise if it's another unexpected error
 
     def close(self):
         return super().close()

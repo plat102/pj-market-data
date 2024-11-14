@@ -166,3 +166,15 @@ class VnstockLibExtractor(BaseExtractor):
 
         return all_histories
     
+    def get_symbols_exchange_df(self) -> pd.DataFrame:
+        return self.connector.get_symbols_exchange_df()
+        
+    def get_symbols_exchange_dict(self) -> dict:
+        return self.connector.get_symbols_exchange_dict()
+    
+    def get_symbols_industry_df(self) -> pd.DataFrame:
+        return self.connector.get_symbols_industries_df()
+    
+    def get_symbols_industry_dict(self) -> dict:
+        return self.connector.get_symbols_industries_dict()
+    
