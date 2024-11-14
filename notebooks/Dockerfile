@@ -30,3 +30,7 @@ RUN curl -O https://repo1.maven.org/maven2/software/amazon/awssdk/s3/2.18.41/s3-
 
 # Clean up to reduce image size (optional)
 # RUN rm -rf /usr/local/spark-3.3.0-bin-hadoop3
+
+# Install Python packages
+RUN pip install --upgrade pip \
+    && pip install python-dotenv \

@@ -51,7 +51,7 @@ x-spark-common: &spark-common
     SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED: no
     SPARK_SSL_ENABLED: no
   env_file:
-    - .env.spark
+    - ./spark.env
 
 services:
   postgres:
@@ -151,6 +151,8 @@ services:
     environment:
       - JUPYTER_ENABLE_LAB="yes"
       - GRANT_SUDO="yes"
+    env_file:
+      - ./spark.env
     volumes:
       - ./notebooks/work:/home/jovyan/work
       - ./notebooks/spark-defaults.conf:/usr/local/spark/conf/spark-defaults.conf

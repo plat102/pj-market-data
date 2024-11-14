@@ -17,3 +17,5 @@ RUN curl -O https://repo1.maven.org/maven2/software/amazon/awssdk/s3/2.18.41/s3-
 
 # Add your spark-defaults.conf configuration file
 # COPY spark-defaults.conf /opt/bitnami/spark/conf/
+
+RUN pip install python-dotenv
