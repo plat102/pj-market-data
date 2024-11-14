@@ -1,4 +1,4 @@
-# Finance Data
+# Market Data Hub
 
 A data project.
 
@@ -176,6 +176,7 @@ make up
 | MinIO Console     | [http://localhost:9001](http://localhost:9001) | 9001 |
 | Spark Master      | [http://localhost:8080](http://localhost:8080) | 8080 |
 | PostgreSQL        | N/A                                         | 5433 |
+<<<<<<< HEAD
 
 ### Run scripts
 
@@ -184,6 +185,8 @@ Run Spark job that move data from bronze to silver
 ```
 
 ```
+=======
+>>>>>>> aa5087cb2fe8fe1f7d2d88f886cb2b31f2111cf6
 
 ## Notes:
 
