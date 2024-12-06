@@ -128,6 +128,68 @@ source .venv/bin/activate  # Activate it on Linux/macOS
 .\.venv\Scripts\activate   # Activate it on Windows
 ```
 
+#### Sample .env file
+
+.env:
+
+```
+SRC_PATH=D:\CODE\de_projects\finance_hub\src
+
+# PostgreSQL Configuration
+POSTGRES_USER=airflow
+POSTGRES_PASSWORD=airflow
+POSTGRES_DB=airflow
+
+# Airflow Paths
+AIRFLOW_DAGS=./airflow/dags
+AIRFLOW_LOGS=./airflow/logs
+AIRFLOW_PLUGINS=./airflow/plugins
+AIRFLOW_SECRETS=./airflow/secrets
+AIRFLOW_PYTHONPATH=./src
+AIRFLOW_DATA=./airflow/data
+
+# Airflow User Configuration
+AIRFLOW_UID=50000
+AIRFLOW_GID=50000
+AIRFLOW_WWW_USER=airflow
+AIRFLOW_WWW_PASSWORD=airflow
+
+# MinIO Credentials
+MINIO_ROOT_USER=minio
+MINIO_ROOT_PASSWORD=minio123
+MINIO_ACCESS_KEY=
+MINIO_SECRET_KEY=
+MINIO_URL= http://localhost:9000
+
+METADATA_KEY="/metadata/symbols_metadata.json"
+BRONZE_PATH="/data/bronze"
+SILVER_PATH="/data/silver"
+
+# Network Configuration
+NETWORK_NAME=spark_network
+
+# Spark Worker Configuration
+SPARK_IMAGE_VERSION=3.5.3
+SPARK_WORKER_MEMORY=2G
+SPARK_WORKER_CORES=1
+
+```
+
+spark.env
+
+```
+# MinIO Credentials
+MINIO_ROOT_USER=minio
+MINIO_ROOT_PASSWORD=minio123
+MINIO_ACCESS_KEY=
+MINIO_SECRET_KEY=
+MINIO_URL= http://minio:9000
+
+METADATA_KEY="/metadata/symbols_metadata.json"
+BRONZE_PATH="/dev/data/bronze"
+SILVER_PATH="/dev/data/silver"
+```
+
 #### `poettry` for Dependency Management
 
 * [Python Poetry in 8 Minutes](https://www.youtube.com/watch?v=Ji2XDxmXSOM&ab_channel=ArjanCodes)
@@ -168,7 +230,7 @@ make up
 
 ![1729573391650](image/README/1729573391650.png)
 
-#### Accessing Services
+### Accessing Services
 
 | Service           | URL                                         | Port |
 | ----------------- | ------------------------------------------- | ---- |
@@ -176,7 +238,6 @@ make up
 | MinIO Console     | [http://localhost:9001](http://localhost:9001) | 9001 |
 | Spark Master      | [http://localhost:8080](http://localhost:8080) | 8080 |
 | PostgreSQL        | N/A                                         | 5433 |
-<<<<<<< HEAD
 
 ### Run scripts
 
@@ -185,8 +246,6 @@ Run Spark job that move data from bronze to silver
 ```
 
 ```
-=======
->>>>>>> aa5087cb2fe8fe1f7d2d88f886cb2b31f2111cf6
 
 ## Notes:
 

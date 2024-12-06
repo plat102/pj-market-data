@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import pandas as pd
 from datetime import datetime
 from pipeline.commons.connectors.s3 import S3BucketConnector
-from pipeline.el_companies import BUCKET_NAME
 from pipeline.extract.vnstock_lib import VnstockLibExtractor
 from pipeline.load.s3 import S3Loader
 
@@ -26,7 +25,8 @@ s3_bucket_target = S3BucketConnector(S3_CONFIG, BUCKET_NAME)
 def extract_stocks() -> pd.DataFrame:
     """Extracts data from the data source."""
     all_symbols = extractor.get_symbols()
-    # all_symbols = ['MBB', 'TV2', 'ACB', 'HSG'] 
+    # all_symbols = ['MBB', 'TV2', 'ACB', 'HSG']
+    print(f"Total symbols: {len(all_symbols)}. List of symbols: {all_symbols}")
     existing_symbols_to_fetch = []
     new_symbols_to_fetch = []
     start_date = None
@@ -91,5 +91,12 @@ def load(df: pd.DataFrame) -> None:
         s3_bucket_target.update_symbol_meta_timestamp(symbol, max_ts, METADATA_KEY)
 
 
-df_combined = extract_stocks()
-load(df_combined)
+def main():
+    print("Extracting data from VNStock...")
+    df_combined = extract_stocks()
+    print("Loading data to S3...")
+    load(df_combined)
+
+if __name__ == "__main__":
+    main()
+    
