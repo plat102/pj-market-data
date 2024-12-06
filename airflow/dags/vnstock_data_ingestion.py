@@ -22,8 +22,22 @@ default_args = {
     schedule_interval=None,
     start_date=datetime(2024, 12, 6),
     catchup=False,
+    description="Ingest data from VNStock and store it in S3",
 )
 def vnstock_data_ingestion():
+    """
+    an Airflow DAG for VNStock data ingestion.
+    This function sets up a DAG with the following tasks:
+    - start: A dummy operator to mark the beginning of the workflow.
+    - run_test_script_task: A task that runs the main function from the pipeline.test_script module.
+    - run_el_stocks_task: A task that runs the main function from the pipeline.el_stocks module.
+    Each task is wrapped in a try-except block to catch and print any exceptions that occur during execution.
+    The task dependencies are defined such that both run_test_script_task and run_el_stocks_task
+    are executed after the start task.
+    Raises:
+        Exception: If an error occurs in either run_test_script_task or run_el_stocks_task.
+    """
+    
     start = DummyOperator(task_id="start")
 
     @task()
