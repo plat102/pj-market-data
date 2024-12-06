@@ -21,6 +21,7 @@ default_args = {
     default_args=default_args,
     schedule_interval=None,
     start_date=datetime(2024, 12, 6),
+    catchup=False,
 )
 def vnstock_data_ingestion():
     start = DummyOperator(task_id="start")
