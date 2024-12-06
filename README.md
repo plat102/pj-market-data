@@ -5,7 +5,7 @@ A data project.
 ## References
 
 * [Setting up Apache Airflow and Spark Clusters on Docker](https://www.youtube.com/watch?v=4IaE2eHTfR0&ab_channel=CodeWithYu)
-* 
+* [Python Poetry in 8 Minutes](https://www.youtube.com/watch?v=Ji2XDxmXSOM&ab_channel=ArjanCodes)
 
 ## Requirements
 
@@ -26,14 +26,14 @@ Cost-Effective and Free Usage
 
 **Phase 1: Ingestion** **& Data Collection**
 
-* [ ] **Python scripts** to fetch data from APIs (e.g., stock market, news).
+* [X] **Python scripts** to fetch data from APIs (e.g., stock market, news).
 * [ ] **Web scraper** (optional) to collect additional data.
 
 **Phase 2: Data Pipelines & Storage**
 
-* [ ] Batch pipeline to ingest historical data into the data lake/warehouse.
+* [X] Batch pipeline to ingest historical data into the data lake/warehouse.
 * [ ] Streaming pipeline using Kafka to handle real-time data.
-* [ ] Storage setup in **MinIO/S3** for raw and processed data.
+* [X] Storage setup in **MinIO/S3** for raw and processed data.
 
 **Phase 3: Orchestration & Scheduling**
 
@@ -43,7 +43,8 @@ Cost-Effective and Free Usage
 **Phase 4: Analytics & Insights**
 
 * [ ] SQL queries and Python scripts to extract insights.
-* [ ] Jupyter notebooks or **Grafana dashboards** for visualization.
+* [X] Jupyter notebooks connection for analysis
+* [ ] Metabase or Grafana dashboards for visualization.
 
 **Phase 5: Monitoring & Alerts**
 
@@ -62,10 +63,11 @@ Cost-Effective and Free Usage
 
 ### Technology
 
+
 ### Folder structure
 
 ```
-investment-data-project/
+data-project-market/
 │
 ├── README.md                   # Project documentation & usage
 ├── docker-compose.yml          # Docker Compose file to spin up services
@@ -190,6 +192,22 @@ BRONZE_PATH="/dev/data/bronze"
 SILVER_PATH="/dev/data/silver"
 ```
 
+Airflow.env
+
+```
+# MinIO Credentials
+MINIO_ROOT_USER=minio
+MINIO_ROOT_PASSWORD=minio123
+MINIO_ACCESS_KEY=
+MINIO_SECRET_KEY=
+MINIO_URL= http://minio:9000
+
+METADATA_KEY="/metadata/symbols_metadata.json"
+BRONZE_PATH="/dev/data/bronze"
+SILVER_PATH="/dev/data/silver"
+
+```
+
 #### `poettry` for Dependency Management
 
 * [Python Poetry in 8 Minutes](https://www.youtube.com/watch?v=Ji2XDxmXSOM&ab_channel=ArjanCodes)
@@ -230,7 +248,7 @@ make up
 
 ![1729573391650](image/README/1729573391650.png)
 
-### Accessing Services
+### Accessing services
 
 | Service           | URL                                         | Port |
 | ----------------- | ------------------------------------------- | ---- |
@@ -239,21 +257,33 @@ make up
 | Spark Master      | [http://localhost:8080](http://localhost:8080) | 8080 |
 | PostgreSQL        | N/A                                         | 5433 |
 
-### Run scripts
+- Ensure that the services are running before attempting to access the URLs.
+- Use the provided access and secret keys (in `docker-compose.yaml`) to log in.
 
-Run Spark job that move data from bronze to silver
+#### Airflow
 
-```
+DAGs:
 
-```
+
+##### Run the ingestion pipeline(s)
+
+![1733458317452](image/README/1733458317452.png)
+
+
+#### MinIO
+
+![1733458515605](image/README/1733458515605.png)
+
+#### Spark Notebooks
+
+
+#### Spark UI
+
+
+#### Metabase
+
 
 ## Notes:
-
-- Ensure that the services are running before attempting to access the URLs.
-- For the MinIO Console, use the provided access and secret keys to log in.
-- The Airflow webserver and Spark master are both accessible via port 8080; ensure to access the correct service based on your needs.
-
-## Other notes
 
 #### git convention
 
