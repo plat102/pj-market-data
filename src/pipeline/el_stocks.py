@@ -91,5 +91,10 @@ def load(df: pd.DataFrame) -> None:
         s3_bucket_target.update_symbol_meta_timestamp(symbol, max_ts, METADATA_KEY)
 
 
-df_combined = extract_stocks()
-load(df_combined)
+def main():
+    df_combined = extract_stocks()
+    load(df_combined)
+
+if __name__ == "__main__":
+    main()
+    
