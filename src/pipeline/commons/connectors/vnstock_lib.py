@@ -52,7 +52,7 @@ class VnstockLibConnector(BaseConnector):
         __init__(): Initializes the VnstockLibConnector instance and sets up the Vnstock instance.
     """
 
-    def __init__(self, init_symbol: str = "VNN"):
+    def __init__(self, init_symbol: str = "VNM"):
         super().__init__()
         self.vnstock = Vnstock()
         self.init_symbol = init_symbol
@@ -65,13 +65,18 @@ class VnstockLibConnector(BaseConnector):
         """
         Connects to the Vnstock library with the given symbol and source.
         """
-        print(
-            f"Connecting to VnstockLib: Symbol: {self.init_symbol}, Source: {self.source}"
-        )
-        self.current_stock = self.vnstock.stock(
-            symbol=self.init_symbol, source=self.source
-        )
-        print("Connected to VnstockLib.")
+        try:
+            print(
+                f"Connecting to VnstockLib: Symbol: {self.init_symbol}, Source: {self.source}"
+            )
+            self.current_stock = self.vnstock.stock(
+                symbol=self.init_symbol, source=self.source
+            )
+            print("Connected to VnstockLib.")
+        except Exception as e:
+            print(f"Failed to connect to VnstockLib. Error: {e}")
+            self.current_stock = None
+            # raise
 
     def list_all_symbols(self) -> pd.DataFrame | None:
         """
