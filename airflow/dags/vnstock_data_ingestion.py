@@ -5,15 +5,9 @@ from datetime import timedelta, datetime
 
 from airflow.decorators import dag, task
 from airflow.operators.dummy import DummyOperator
-from airflow.operators.python import PythonOperator
-from fsspec import Callback
 
 # Add the pipeline directory to the Python path
 sys.path.append("/opt/airflow/src/pipeline")
-
-# Import scripts
-from pipeline.test_script import main as run_test_script
-from pipeline.el_stocks import main as run_el_stocks
 
 default_args = {
     "owner": "thu.phan",
@@ -33,11 +27,21 @@ def vnstock_data_ingestion():
 
     @task()
     def run_test_script_task():
-        run_test_script()
+        from pipeline.test_script import main as run_test_script
+        try:
+            run_test_script()
+        except Exception as e:
+            print(f"Error in run_test_script_task: {e}")
+            raise
 
     @task()
     def run_el_stocks_task():
-        run_el_stocks()
+        from pipeline.el_stocks import main as run_el_stocks
+        try:
+            run_el_stocks()
+        except Exception as e:
+            print(f"Error in run_el_stocks_task: {e}")
+            raise
 
     start >> [run_test_script_task(), run_el_stocks_task()]
 
