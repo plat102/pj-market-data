@@ -100,9 +100,16 @@ class VnstockLibExtractor(BaseExtractor):
             ]
 
             # Filter out empty dataframes and concatenate the batch
-            batch_df = pd.concat(
-                [df for df in batch_histories if not df.empty], ignore_index=True
-            )
+            try:
+                batch_df = pd.concat(
+                    [df for df in batch_histories if not df.empty], ignore_index=True
+                )
+            except ValueError as e:
+                if "No objects to concatenate" in str(e):
+                    batch_df = pd.DataFrame()
+                else:
+                    raise
+
             all_histories.append(batch_df)
 
         # Concatenate all batches into a single DataFrame
