@@ -51,7 +51,7 @@ def vnstock_data_ingestion():
 
     @task()
     def run_el_stocks_task():
-        from pipeline.el_stocks import main as run_el_stocks
+        from pipeline.el_stocks import el_stocks as run_el_stocks
         try:
             run_el_stocks()
         except Exception as e:
