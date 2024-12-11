@@ -5,6 +5,7 @@ from datetime import timedelta, datetime
 
 from airflow.decorators import dag, task
 from airflow.operators.dummy import DummyOperator
+from airflow.operators.bash import BashOperator
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
 
 default_args = {
@@ -31,16 +32,25 @@ def vnstock_data_transform():
     def pm_run_stock_notebook():
         print('installing papermill')
     
+    # TODO: BashOperator to run the simple test Spark job
+    spark_submit = BashOperator(
+        task_id='test_spark_submit',
+        bash_command='spark-submit --master spark://spark-master:7077 /opt/airflow/spark/application/python/process_stock_price.py',
+    )
+    
+    # Test cmd docker exec -it arrow-spark /opt/airflow/spark/application/python/process_stock_price.py
+    
+    # TODO: SparkSubmitOperator to run the Spark job
     spark_job = SparkSubmitOperator(
-        task_id="spark_transform_job_stock",
-        application="/opt/airflow/spark/application/python/process_stock_price.py",
-        conn_id="spark_default",
-        name="arrow-spark",
+        task_id='process_stock_prices',
+        application='/opt/airflow/spark/application/python/process_stock_price.py',
+        conn_id='spark_default',
         conf={
-            "spark.executor.memory": "2g",
-            "spark.driver.memory": "2g",
+            'spark.executor.memory': '2g',
+            'spark.driver.memory': '2g'
         },
-        verbose=True
+        verbose=True,
+        application_args=[]
     )
 
     start >> [pm_run_stock_notebook(), spark_job]

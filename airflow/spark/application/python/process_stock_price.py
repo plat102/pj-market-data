@@ -24,7 +24,7 @@ spark = (SparkSession.builder
     .getOrCreate()
 )
 
-print(f"Spark session created: {spark}")
+print(f"Spark session created: {spark}. Spark version: {spark.version}")
 
 data = [("Alice", 1), ("Bob", 2), ("Cathy", 3)]
 df = spark.createDataFrame(data, ["Name", "Id"])
