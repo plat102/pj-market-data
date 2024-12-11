@@ -1,4 +1,4 @@
-FROM docker.io/bitnami/spark:3.3.2
+FROM docker.io/bitnami/spark:3.3.4
 
 USER root
 
@@ -18,4 +18,6 @@ RUN curl -O https://repo1.maven.org/maven2/software/amazon/awssdk/s3/2.18.41/s3-
 # Add your spark-defaults.conf configuration file
 # COPY spark-defaults.conf /opt/bitnami/spark/conf/
 
-RUN pip install python-dotenv
+# Install Python packages
+COPY requirements.txt /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
