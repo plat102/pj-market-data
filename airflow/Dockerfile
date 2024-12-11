@@ -1,5 +1,6 @@
 # Use the official Apache Airflow image with a specific version
-FROM apache/airflow:2.9.2
+# FROM apache/airflow:2.9.2
+FROM apache/airflow:2.9.2-python3.10
 
 # Set the environment variables
 # ENV AIRFLOW_HOME=/opt/airflow

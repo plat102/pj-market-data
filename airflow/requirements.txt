@@ -5,3 +5,6 @@ vnstock3
 ipython
 boto3
 pyspark==3.5.3
+python-dotenv
+papermill==2.3.4
+apache-airflow-providers-apache-spark==4.10.0
