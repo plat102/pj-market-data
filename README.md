@@ -4,8 +4,20 @@ A data project.
 
 ## References
 
-* [Setting up Apache Airflow and Spark Clusters on Docker](https://www.youtube.com/watch?v=4IaE2eHTfR0&ab_channel=CodeWithYu)
+
 * [Python Poetry in 8 Minutes](https://www.youtube.com/watch?v=Ji2XDxmXSOM&ab_channel=ArjanCodes)
+
+Spark
+
+* [Setting up Apache Airflow and Spark Clusters on Docker](https://www.youtube.com/watch?v=4IaE2eHTfR0&ab_channel=CodeWithYu)
+* [Setting up a Spark standalone cluster on Docker in layman terms | by Marin Aglić | Medium](https://medium.com/@MarinAgli1/setting-up-a-spark-standalone-cluster-on-docker-in-layman-terms-8cbdc9fdd14b)
+
+Airflow
+
+* [GitHub - Rafavermar/SparkAirflow-PythonScala](https://github.com/Rafavermar/SparkAirflow-PythonScala)
+* [Building the image — docker-stack Documentation](https://airflow.apache.org/docs/docker-stack/build.html#extending-the-image)
+
+-
 
 ## Requirements
 
@@ -62,7 +74,6 @@ Cost-Effective and Free Usage
 ## Architecture
 
 ### Technology
-
 
 ### Folder structure
 
@@ -250,12 +261,13 @@ make up
 
 ### Accessing services
 
-| Service           | URL                                         | Port |
-| ----------------- | ------------------------------------------- | ---- |
-| Airflow Webserver | [http://localhost:8080](http://localhost:8080) | 8080 |
-| MinIO Console     | [http://localhost:9001](http://localhost:9001) | 9001 |
-| Spark Master      | [http://localhost:8080](http://localhost:8080) | 8080 |
-| PostgreSQL        | N/A                                         | 5433 |
+| Service                    | URL                                         | Port |
+| -------------------------- | ------------------------------------------- | ---- |
+| Airflow Webserver          | [http://localhost:8080](http://localhost:8080) | 8080 |
+| MinIO Console              | [http://localhost:9001](http://localhost:9001) | 9001 |
+| Spark Master               | [http://localhost:8080](http://localhost:8080) | 8080 |
+| Spark notebook application | [http://localhost:4040](http://localhost:4040) |      |
+| PostgreSQL                 | N/A                                         | 5433 |
 
 - Ensure that the services are running before attempting to access the URLs.
 - Use the provided access and secret keys (in `docker-compose.yaml`) to log in.
@@ -264,11 +276,9 @@ make up
 
 DAGs:
 
-
 ##### Run the ingestion pipeline(s)
 
 ![1733458317452](image/README/1733458317452.png)
-
 
 #### MinIO
 
@@ -276,12 +286,9 @@ DAGs:
 
 #### Spark Notebooks
 
-
 #### Spark UI
 
-
 #### Metabase
-
 
 ## Notes:
 
