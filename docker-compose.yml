@@ -20,6 +20,7 @@ x-airflow-common:
     AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKEND: 'airflow.api.auth.backend.basic_auth'
     AIRFLOW_CONN_POSTGRES_DEFAULT: postgres://airflow:airflow@postgres:5432/airflow
+    AIRFLOW__CORE__TEST_CONNECTION: Enabled
     PYTHONPATH: /opt/airflow/src
   env_file:
     - ./airflow/airflow.env
@@ -30,6 +31,7 @@ x-airflow-common:
     - ${AIRFLOW_SECRETS}:/opt/secrets
     - ${AIRFLOW_DATA}:/opt/airflow/data
     - ${AIRFLOW_PYTHONPATH}:/opt/airflow/src
+    - ${AIRFLOW_SPARK}:/opt/airflow/spark
   user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
   depends_on:
     postgres:
