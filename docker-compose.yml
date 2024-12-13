@@ -124,7 +124,7 @@ services:
   spark-master:
     <<: *spark-common
     container_name: spark-master
-    # command: bin/spark-class org.apache.spark.deploy.master.Master
+    command: bin/spark-class org.apache.spark.deploy.master.Master
     ports:
       - "8080:8080"
       - "7077:7077"
@@ -133,10 +133,11 @@ services:
       SPARK_LOCAL_IP: spark-master
     volumes:
       - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
+      - ./spark/jobs:/opt/bitnami/spark/jobs
 
   spark-worker:
     <<: *spark-common
-    # command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     depends_on:
       - spark-master
     environment:
