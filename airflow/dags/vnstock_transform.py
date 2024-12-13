@@ -36,7 +36,17 @@ def vnstock_data_transform():
         task_id="process_stock_prices",
         application="/opt/airflow/spark/application/python/process_stock_price.py",
         conn_id="spark_default",
-        conf={"spark.executor.memory": "2g", "spark.driver.memory": "2g"},
+        jars='jars/delta-core_2.12-2.2.0.jar,jars/hadoop-aws-3.3.4.jar,jars/delta-storage-2.2.0.jar,jars/aws-java-sdk-1.12.367.jar,jars/s3-2.18.41.jar,jars/aws-java-sdk-bundle-1.11.1026.jar',
+        conf={
+            "spark.hadoop.fs.s3a.endpoint": "http://minio:9000",
+            "spark.hadoop.fs.s3a.access.key": "minio",
+            "spark.hadoop.fs.s3a.secret.key": "minio123",
+            "spark.hadoop.fs.s3a.path.style.access": "true",
+            "spark.hadoop.fs.s3a.connection.ssl.enabled": "false",
+            "spark.hadoop.fs.s3a.impl": "org.apache.hadoop.fs.s3a.S3AFileSystem",
+            "spark.sql.extensions": "io.delta.sql.DeltaSparkSessionExtension",
+            "spark.sql.catalog.spark_catalog": "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+        },
         verbose=True,
         application_args=[],
     )
