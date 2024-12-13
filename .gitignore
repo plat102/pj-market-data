@@ -186,3 +186,5 @@ __pycache__/
 *.sqlite3
 
 /secrets/*
+
+/spark/jars/*

@@ -32,6 +32,7 @@ x-airflow-common:
     - ${AIRFLOW_DATA}:/opt/airflow/data
     - ${AIRFLOW_PYTHONPATH}:/opt/airflow/src
     - ${AIRFLOW_SPARK}:/opt/airflow/spark
+    - ./spark/jars:/opt/airflow/jars  # Mount the shared volume for JARs
   user: "${AIRFLOW_UID:-50000}:${AIRFLOW_GID:-50000}"
   depends_on:
     postgres:
@@ -45,8 +46,8 @@ x-spark-common: &spark-common
     dockerfile: Dockerfile
   volumes:
     - ./spark/spark-defaults.conf:/opt/bitnami/spark/conf/spark-defaults.conf
-    # - spark-jars:/opt/bitnami/spark/jars
     - ./spark/jobs:/opt/bitnami/spark/jobs
+    # - ./spark/jars:/opt/bitnami/spark/jars  # Mount the shared volume for JARs
   networks:
     - spark_network
   environment:
@@ -162,6 +163,7 @@ services:
     volumes:
       - ./notebooks/work:/home/jovyan/work
       - ./notebooks/spark-defaults.conf:/usr/local/spark/conf/spark-defaults.conf
+      # - ./spark/jars:/usr/local/spark/jars
     ports:
       - "8888:8888"
       - "4040:4040"
