@@ -14,6 +14,7 @@ default_args = {
     "retry_delay": timedelta(minutes=5),
 }
 
+
 @dag(
     dag_id="test_spark_connection",
     default_args=default_args,
@@ -26,34 +27,49 @@ def test_spark_con():
     """
     Test Spark connection
     """
-    
+
     start = DummyOperator(task_id="start")
 
     @task()
     def pm_run_stock_notebook():
-        print('installing papermill')
-
-    test_spark_submit = SparkSubmitOperator(
-        task_id='test_spark_submit',
-        application='/opt/bitnami/spark/jobs/test_connection.py',
-        # application='/opt/airflow/spark/application/python/test_job.py',
-        conn_id='spark_default',
-        verbose=True,
-    )
+        print("installing papermill")
 
     test_spark_connection_bash = BashOperator(
-        task_id='test_spark_connection_bash',
-        bash_command='nc -zv spark-master 8080 && nc -zv spark-master 7077'
+        task_id="test_spark_connection_bash",
+        bash_command="nc -zv spark-master 8080 && nc -zv spark-master 7077",
     )
 
-    spark_submit = BashOperator(
-        task_id='test_spark_submit_bash',
-        # bash_command='spark-submit --master spark://spark-master:7077 /opt/airflow/spark/application/python/test_job.py',
-        bash_command='spark-submit --master spark://spark-master:7077 /opt/bitnami/spark/jobs/test_connection.py',
+    submit_script_spark_bash = BashOperator(
+        task_id="submit_script_spark_bash",
+        bash_command='spark-submit --master spark://172.21.0.3:7077 /opt/airflow/spark/application/python/test_connection.py',
+        # bash_command="spark-submit --master spark://spark-master:7077 /opt/bitnami/spark/jobs/test_connection.py",
     )
     
+    submit_script_spark = SparkSubmitOperator(
+        task_id="submit_script_spark",
+        application="/opt/bitnami/spark/jobs/test_connection.py",
+        # application='/opt/airflow/spark/application/python/test_connection.py',
+        conn_id="spark_default",
+        verbose=True,
+    )
+    submit_script_airflow = SparkSubmitOperator(
+        task_id="submit_script_airflow",
+        # application='/opt/bitnami/spark/jobs/test_connection.py',
+        application="/opt/airflow/spark/application/python/test_connection.py",
+        conn_id="spark_default",
+        verbose=True,
+    )
+    
+    # TODO: SparkSubmitOperator 
 
-    (start >> [test_spark_submit, test_spark_connection_bash, spark_submit] 
+    (
+        start
+        >> test_spark_connection_bash
+        >> submit_script_spark_bash
+        >> [
+            submit_script_spark,
+            submit_script_airflow,
+        ]
     )
 
 
