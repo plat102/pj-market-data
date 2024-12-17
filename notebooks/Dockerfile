@@ -21,12 +21,14 @@ RUN curl -O https://repo1.maven.org/maven2/software/amazon/awssdk/s3/2.18.41/s3-
     && curl -O https://repo1.maven.org/maven2/io/delta/delta-core_2.12/2.2.0/delta-core_2.12-2.2.0.jar \
     && curl -O https://repo1.maven.org/maven2/io/delta/delta-storage/2.2.0/delta-storage-2.2.0.jar \
     && curl -O https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar \
+    && curl -O https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.0/postgresql-42.5.0.jar \
     && mv s3-2.18.41.jar /usr/local/spark/jars \
     && mv aws-java-sdk-1.12.367.jar /usr/local/spark/jars \
     && mv aws-java-sdk-bundle-1.11.1026.jar /usr/local/spark/jars \
     && mv delta-core_2.12-2.2.0.jar /usr/local/spark/jars \
     && mv delta-storage-2.2.0.jar /usr/local/spark/jars \
-    && mv hadoop-aws-3.3.4.jar /usr/local/spark/jars
+    && mv hadoop-aws-3.3.4.jar /usr/local/spark/jars \
+    && mv postgresql-42.5.0.jar /usr/local/spark/jars
 
 # Clean up to reduce image size (optional)
 # RUN rm -rf /usr/local/spark-3.3.0-bin-hadoop3

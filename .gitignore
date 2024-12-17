@@ -186,6 +186,7 @@ __pycache__/
 *.sqlite3
 
 /secrets/*
+/airflow/secrets/*
 
 /spark/jars/*
 
