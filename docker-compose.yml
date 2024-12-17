@@ -2,7 +2,7 @@ version: '3.9'
 
 networks:
   spark_network:
-    driver: bridge  # Ensure this network is defined
+    driver: bridge 
 
 # volumes:
 #   spark-jars:
@@ -73,6 +73,9 @@ services:
     restart: always
     ports:
       - "5433:5432"
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+      - ./postgresql/init-scripts:/docker-entrypoint-initdb.d
     networks:
       - spark_network
 
