@@ -1,4 +1,4 @@
-FROM docker.io/bitnami/spark:3.3.2
+FROM docker.io/bitnami/spark:3.3.4
 
 USER root
 
@@ -10,12 +10,16 @@ RUN curl -O https://repo1.maven.org/maven2/software/amazon/awssdk/s3/2.18.41/s3-
     && curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.12.367/aws-java-sdk-1.12.367.jar \
     && curl -O https://repo1.maven.org/maven2/io/delta/delta-core_2.12/2.2.0/delta-core_2.12-2.2.0.jar \
     && curl -O https://repo1.maven.org/maven2/io/delta/delta-storage/2.2.0/delta-storage-2.2.0.jar \
+    && curl -O https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.0/postgresql-42.5.0.jar \
     && mv s3-2.18.41.jar /opt/bitnami/spark/jars \
     && mv aws-java-sdk-1.12.367.jar /opt/bitnami/spark/jars \
     && mv delta-core_2.12-2.2.0.jar /opt/bitnami/spark/jars \
-    && mv delta-storage-2.2.0.jar /opt/bitnami/spark/jars
+    && mv delta-storage-2.2.0.jar /opt/bitnami/spark/jars \
+    && mv postgresql-42.5.0.jar /opt/bitnami/spark/jars
 
 # Add your spark-defaults.conf configuration file
 # COPY spark-defaults.conf /opt/bitnami/spark/conf/
 
-RUN pip install python-dotenv
+# Install Python packages
+COPY requirements.txt /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements.txt

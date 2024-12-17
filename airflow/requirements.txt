@@ -4,4 +4,7 @@ apache-airflow==2.9.2 --constraint https://raw.githubusercontent.com/apache/airf
 vnstock3
 ipython
 boto3
-pyspark==3.5.3
+pyspark==3.3.4
+python-dotenv
+papermill==2.3.4
+apache-airflow-providers-apache-spark==4.10.0

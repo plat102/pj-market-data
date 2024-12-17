@@ -60,8 +60,14 @@ def extract_stocks() -> pd.DataFrame:
         start_date=start_date.strftime("%Y-%m-%d"),
         end_date=end_date.strftime("%Y-%m-%d")
     )
-
-    df_combined = pd.concat([df_new, df_update])
+    
+    try:
+        df_combined = pd.concat([df_new, df_update])
+    except ValueError as e:
+        if "No objects to concatenate" in str(e):
+            df_combined = pd.DataFrame()
+        else:
+            raise
     return df_combined
 
 
@@ -78,7 +84,7 @@ def load(df: pd.DataFrame) -> None:
             root="data",
             layer="bronze",
             data_source="vnstock3",
-            table="stock_quote",
+            table="stock_quote_history_daily",
             updated_date=datetime.now().strftime("%Y-%m-%d"),
             file_name=f"stock_quote_histories_{symbol}",
             timestamp=datetime.now().strftime("%Y%m%d%H%M%S"),
@@ -91,12 +97,15 @@ def load(df: pd.DataFrame) -> None:
         s3_bucket_target.update_symbol_meta_timestamp(symbol, max_ts, METADATA_KEY)
 
 
-def main():
+def el_stocks():
     print("Extracting data from VNStock...")
     df_combined = extract_stocks()
     print("Loading data to S3...")
-    load(df_combined)
+    if df_combined.empty:
+        print("No data to load.")
+    else:
+        load(df_combined)
 
 if __name__ == "__main__":
-    main()
+    el_stocks()
     
