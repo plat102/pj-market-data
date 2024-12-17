@@ -106,8 +106,10 @@ df_cal = df_cal.withColumn(
     F.current_timestamp()
 )
 
-
-print(bronze_path) 
-print(silver_path)
+# print some data
+df_cal.show(20, truncate=False)
+df_cal.printSchema()
 
 df_cal.write.mode("overwrite").parquet(silver_path)
+
+print(f"Data written to silver path at {silver_path}")
