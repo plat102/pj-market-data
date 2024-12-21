@@ -4,7 +4,6 @@ A data project.
 
 ## References
 
-
 * [Python Poetry in 8 Minutes](https://www.youtube.com/watch?v=Ji2XDxmXSOM&ab_channel=ArjanCodes)
 
 Spark
@@ -16,8 +15,6 @@ Airflow
 
 * [GitHub - Rafavermar/SparkAirflow-PythonScala](https://github.com/Rafavermar/SparkAirflow-PythonScala)
 * [Building the image — docker-stack Documentation](https://airflow.apache.org/docs/docker-stack/build.html#extending-the-image)
-
--
 
 ## Requirements
 
@@ -279,6 +276,10 @@ DAGs:
 ##### Run the ingestion pipeline(s)
 
 ![1733458317452](image/README/1733458317452.png)
+
+##### Run the transform pipeline()s)
+
+![1734772521444](image/README/1734772521444.png)
 
 #### MinIO
 
