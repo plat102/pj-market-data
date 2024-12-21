@@ -57,6 +57,12 @@ def load(exchange, industries):
     )
     s3_bucket_target.write_df_to_s3(industries, industry_key, file_format="json")
 
-
-symbols_exchange, symbols_industries = extract()
-load(symbols_exchange, symbols_industries)
+def el_companies():
+    symbols_exchange, symbols_industries = extract()
+    print('Exchange: ', symbols_exchange.head())
+    print('Industries: ', symbols_industries.head())
+    load(symbols_exchange, symbols_industries)
+    
+if __name__ == "__main__":
+    el_companies()
+    
