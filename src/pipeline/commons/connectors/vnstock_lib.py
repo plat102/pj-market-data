@@ -341,7 +341,9 @@ class VnstockLibConnector(BaseConnector):
         Returns:
             pd.DataFrame: A DataFrame containing stock symbols by exchange.
         """
-        return self.current_stock.listing.symbols_by_exchange()
+        df =  self.current_stock.listing.symbols_by_exchange()
+        df['loaded_timestamp'] = pd.Timestamp.now(tz=DateTimeFormat.TIMEZONE_UTC.value)  # Add timestamp for tracking
+        return df
     
     def get_symbols_exchange_dict(self) -> dict:
         """
@@ -359,7 +361,9 @@ class VnstockLibConnector(BaseConnector):
         Returns:
             pd.DataFrame: A DataFrame containing stock symbols by industries.
         """
-        return self.current_stock.listing.symbols_by_industries()
+        df = self.current_stock.listing.symbols_by_industries()
+        df['loaded_timestamp'] = pd.Timestamp.now(tz=DateTimeFormat.TIMEZONE_UTC.value)  # Add timestamp for tracking
+        return df
     
     def get_symbols_industries_dict(self) -> dict:
         """
