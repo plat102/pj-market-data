@@ -36,8 +36,17 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO dbt_user;
 GRANT CONNECT ON DATABASE analytics TO metabase_user;
 GRANT USAGE ON SCHEMA intermediate TO metabase_user;
 GRANT USAGE ON SCHEMA mart TO metabase_user;
+GRANT USAGE ON SCHEMA staging TO metabase_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA intermediate TO metabase_user;
 GRANT SELECT ON ALL TABLES IN SCHEMA mart TO metabase_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA staging TO metabase_user;
+
+-- Create a separate Metabase database (if needed)
+CREATE DATABASE metabase OWNER metabase_user;
+
+-- Grant privileges on Metabase database (if used)
+GRANT CONNECT ON DATABASE metabase TO metabase_user;
+GRANT ALL PRIVILEGES ON DATABASE metabase TO metabase_user;
 
 -- Set default privileges for metabase_user
 ALTER DEFAULT PRIVILEGES IN SCHEMA intermediate

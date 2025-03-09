@@ -173,19 +173,23 @@ services:
     networks:
       - spark_network
 
-  # dbt Service for Data Transformation
-  # dbt:
-  #   image: ghcr.io/dbt-labs/dbt-postgres:1.8.2
-  #   container_name: dbt
-  #   volumes:
-  #     # - ./dbt:/usr/app
-  #     - ./dbt/project:/usr/app
-  #     - ./dbt/profiles.yml:/root/.dbt/profiles.yml
-  #   working_dir: /usr/app
-  #   environment:
-  #     DBT_PROFILES_DIR: /usr/app
-  #   # entrypoint: ["dbt"]  # Set entry point to dbt (default: dbt)
-  #   # command: ["run"]     # Command to run after entry point
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
+  metabase:
+    container_name: metabase
+    image: metabase/metabase:v0.52.2.1
+    ports:
+      - "3000:3000"
+    environment:
+      MB_DB_HOST: postgres
+      MB_DB_TYPE: "postgres"
+      MB_DB_DBNAME: "metabase"
+      MB_DB_PORT: "5432"
+      MB_DB_USER: metabase_user # "${POSTGRES_USER}"
+      MB_DB_PASS: metabase_password # "${POSTGRES_PASSWORD}"
+      MB_PASSWORD_COMPLEXITY: strong
+      MB_PASSWORD_LENGTH: 10
+      JAVA_TIMEZONE: "${MB_JAVA_TIMEZONE}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - spark_network
