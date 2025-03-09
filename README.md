@@ -1,6 +1,6 @@
 # Market Data Hub
 
-A data project.
+A data project designed to collect, process, and analyze market data.
 
 ## References
 
@@ -72,59 +72,36 @@ Cost-Effective and Free Usage
 
 ### Technology
 
+![1741510743659](image/README/1741510743659.png)
+
 ### Folder structure
 
 ```
-data-project-market/
+finance_hub/
 │
-├── README.md                   # Project documentation & usage
-├── docker-compose.yml          # Docker Compose file to spin up services
-├── terraform/                  # Terraform scripts for cloud resources (optional)
-│   ├── main.tf                 # Main Terraform configuration
-│   └── variables.tf            # Variables used in Terraform setup
+├── airflow/        # Airflow DAGs & configs
+├── dbt/            # dbt models & transformations
+├── image/          # images for docs
+├── kafka/          # Kafka topics, producers & consumers
+├── minio/          # MinIO storage setup
+├── monitoring/     # Prometheus & Grafana setup
+├── notebooks/      # Jupyter notebooks for analysis
+├── postgresql/     # PostgreSQL database scripts
+├── secrets/        # Credentials & sensitive files
+├── spark/          # Spark ETL & streaming jobs
+├── src/            # Source code (ETL, API, utils)
+├── terraform/      # Infrastructure as code (Terraform)
 │
-├── data/                       # Folder for raw and processed data (local runs)
-│   ├── raw/                    # Raw API or web scraped data
-│   └── processed/              # Processed and transformed data
-│
-├── ingestion/                  # Data ingestion scripts and API connectors
-│   ├── stock_api.py            # Fetch stock data from public API
-│   ├── news_api.py             # Fetch news data from news API
-│   └── web_scraper.py          # Web scraper for mortgage/accommodation data
-│
-├── airflow/                    # Airflow DAGs and configurations
-│   ├── dags/                   # Folder for Airflow DAGs
-│   │   └── stock_pipeline_dag.py # Example DAG for stock data ingestion
-│   └── airflow.cfg             # Airflow configuration file
-│
-├── kafka/                      # Kafka configurations and consumers/producers
-│   ├── kafka_producer.py       # Kafka producer for stock data stream
-│   ├── kafka_consumer.py       # Kafka consumer to read and process data
-│   └── config/                 # Kafka configurations (e.g., topics, brokers)
-│
-├── spark/                      # Spark batch & streaming jobs
-│   ├── batch_job.py            # Spark job for batch ETL
-│   ├── streaming_job.py        # Spark job for Kafka streaming processing
-│   └── config/                 # Spark configurations (e.g., settings, cluster)
-│
-├── sql/                        # SQL queries and database scripts
-│   ├── create_tables.sql       # SQL script to create tables in PostgreSQL
-│   └── queries.sql             # Sample queries to analyze the data
-│
-├── minio/                      # MinIO configuration files
-│   └── buckets/                # Pre-defined bucket names and structure
-│
-├── monitoring/                 # Monitoring with Prometheus/Grafana
-│   ├── prometheus.yml          # Prometheus configuration
-│   └── grafana/                # Grafana dashboards and settings
-│
-├── notebooks/                  # Jupyter notebooks for exploratory analysis
-│   └── analysis.ipynb          # Example notebook to explore the data
-│
-├── requirements.txt            # Python dependencies for ingestion and jobs
-├── .env                        # Environment variables (API keys, passwords, etc.)
-└── scripts/                    # Utility scripts (e.g., clean data, health checks)
-    └── health_check.py         # Script to check the health of all services
+├── .env            # Environment variables
+├── .gitignore      # Git ignore file
+├── .pylintrc       # Linter config
+├── docker-compose.yml  # Service orchestration
+├── download_jars.sh    # Script for downloading dependencies
+├── Makefile        # Automation tasks
+├── poetry.lock     # Dependency lock file
+├── pyproject.toml  # Python project metadata
+├── README.md       # Project documentation
+├── spark.env       # Spark environment variables
 ```
 
 ## Run the project
@@ -140,7 +117,7 @@ source .venv/bin/activate  # Activate it on Linux/macOS
 
 #### Sample .env file
 
-.env:
+`.env`:
 
 ```
 SRC_PATH=D:\CODE\de_projects\finance_hub\src
@@ -285,11 +262,13 @@ DAGs:
 
 ![1733458515605](image/README/1733458515605.png)
 
-#### Spark Notebooks
+#### Spark Notebooks & UI
 
-#### Spark UI
+[🚧 Update in Progress]
 
 #### Metabase
+
+[🚧 Update in Progress]
 
 ## Notes:
 
@@ -310,6 +289,20 @@ DAGs:
 | ci       | Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs) |
 | chore    | Other changes that don't modify `src` or `test` files                                                   |
 | revert   | Reverts a previous commit                                                                                   |
+
+### Lessons Learned
+
+* Implementing an OOP-style ETL pipeline
+* Setting up and integrating Spark and Airflow
+* Processing data efficiently with Spark
+* Exploring stock analysis while designing data serving strategies
+
+### Future Enhancements
+
+* Accelerating stock data ingestion (BS4-based approach is a bit slow)
+* Expanding data sources (e.g., housing, finance news) to build a unified view
+* Implement real-time analytics with a streaming layer for timely insights
+* Improving package management for Python projects (tried Poetry but still not familiar with it)
 
 ---
 
