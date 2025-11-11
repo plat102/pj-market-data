@@ -104,18 +104,21 @@ Build a production-ready data engineering solution for Vietnamese stock market a
 
 ### Performance Requirements
 
-- Ingest ~2000 stocks daily
+- Ingest stocks daily
 - Transform within 30 minutes
 - Store 1+ year of historical data
 - Support ad-hoc analysis queries
 
 ## Future Enhancements
 
-Tracked in project management tools (Notion/Jira):
-
-- **Testing**: Unit and integration test coverage
+- **Additional Data Sources**: 
+  - Real estate data (property prices, transactions)
+  - News and sentiment analysis (financial news, social media)
+  - Economic indicators (GDP, inflation, interest rates)
+  - International market data (stocks, commodities, forex)
 - **Monitoring**: Custom metrics and alerting
 - **Data Quality**: Validation framework
+- **Testing**: Unit and integration test coverage
 - **Gold Layer**: Business-ready aggregations
 - **Streaming**: Real-time price updates (Kafka)
 - **ML**: Predictive models and feature engineering

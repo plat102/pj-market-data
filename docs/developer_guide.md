@@ -194,19 +194,7 @@ Once services are running, access them at:
 
 ### Running Pipeline Scripts Locally
 
-Set PYTHONPATH and run scripts directly:
-
-**Windows (PowerShell):**
-```powershell
-$env:PYTHONPATH = "$PWD\src"
-python src/pipeline/el_stocks.py
-```
-
-**Linux/macOS:**
-```bash
-export PYTHONPATH="$PWD/src"
-python src/pipeline/el_stocks.py
-```
+[TBD]
 
 ## Development Workflow
 
@@ -355,58 +343,12 @@ finance_hub/
 
 ## Testing
 
-### Running Tests
-
-```bash
-# Run all tests
-pytest
-
-# Run specific test file
-pytest tests/test_extract.py
-
-# Run with coverage
-pytest --cov=src/pipeline tests/
-```
-
-### Writing Tests
-
-Place tests in `tests/` directory matching source structure:
-
-```
-tests/
-├── test_extract.py
-├── test_transform.py
-└── test_load.py
-```
-
-Example test:
-```python
-import pytest
-from pipeline.extract.vnstock_lib import VnstockLibExtractor
-
-def test_extractor_init():
-    extractor = VnstockLibExtractor()
-    assert extractor is not None
-```
+[TBD]
 
 ## Troubleshooting
 
 ### Common Issues
-
-**Docker containers not starting:**
-- Check Docker daemon is running
-- Verify port conflicts: `docker ps`
-- Check logs: `docker-compose logs`
-
-**Import errors in Python:**
-- Ensure PYTHONPATH is set correctly
-- Verify virtual environment is activated
-- Check dependencies are installed
-
-**Airflow DAG not appearing:**
-- Check DAG syntax: `python airflow/dags/your_dag.py`
-- Verify AIRFLOW_DAGS path in docker-compose.yml
-- Check Airflow scheduler logs
+[TBD]
 
 ## Additional Resources
 

@@ -2,7 +2,7 @@ FROM jupyter/pyspark-notebook:lab-3.3.4
 
 USER root
 
-# Backup Spark cũ
+# Backup old Spark version
 RUN mv /usr/local/spark /usr/local/spark-old
 
 # Download Spark 3.3.4 using wget

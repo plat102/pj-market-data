@@ -1,16 +1,19 @@
 # Market Data Hub
 
-A production-ready data engineering project for Vietnamese stock market data processing and analysis.
+A data engineering project for Vietnamese stock market data processing and analysis.
 
 ## Overview
 
 This project implements a complete data engineering workflow: extracting market data from VNStock API, orchestrating batch ingestion with Airflow, storing raw/processed data in MinIO (S3-compatible storage), loading structured data to PostgreSQL, and enabling analysis through Jupyter notebooks and Metabase dashboards.
 
+
+### High-Level Architecture
+
 **Key Technologies**: Python • Apache Airflow • Apache Spark • MinIO/S3 • PostgreSQL • Metabase • Docker
 
-![Data Architecture](docs/image/data_architecture.png)
+![High-Level Data Architecture](docs/image/data_architecture.png)
 
-## What's Implemented
+### What's Implemented
 
 - ✅ **Batch Data Ingestion**: Python scripts for extracting stock and company data from VNStock API
 - ✅ **Pipeline Orchestration**: Airflow DAGs for scheduling and monitoring data workflows
@@ -97,6 +100,26 @@ finance_hub/
 - 🏗️ **[Architecture](docs/architecture.md)** - System design and component overview
 - 🗺️ **[Roadmap](docs/roadmap.md)** - Project objectives and scope
 
+## Important Resources
+
+### Official Documentation
+- **[Apache Airflow](https://airflow.apache.org/docs/)** - Workflow orchestration platform
+- **[Apache Spark](https://spark.apache.org/docs/latest/)** - Unified analytics engine
+- **[MinIO](https://min.io/docs/minio/linux/index.html)** - S3-compatible object storage
+- **[PostgreSQL](https://www.postgresql.org/docs/)** - Relational database
+- **[Metabase](https://www.metabase.com/docs/latest/)** - Business intelligence tool
+
+### Data Source
+- **[VNStock](https://github.com/thinh-vu/vnstock)** - Vietnamese stock market data API
+- **[VNStock Documentation](https://docs.vnstock.site/)** - API reference and guides
+
+### Architecture Patterns
+- **[Medallion Architecture](https://www.databricks.com/glossary/medallion-architecture)** - Bronze, Silver, Gold layers
+- **[Data Pipeline Design Patterns](https://www.startdataengineering.com/post/design-patterns/)** - ETL/ELT best practices
+
+### Learning Resources
+- **[Awesome Data Engineering](https://github.com/igorbarinov/awesome-data-engineering)** - Curated list of data engineering tools
+ 
 ## Key Learnings
 
 - Designed and implemented an object-oriented ETL pipeline architecture

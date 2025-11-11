@@ -7,17 +7,25 @@ This document describes the system architecture, component design, and data flow
 ### High-Level Design
 
 ```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐     ┌──────────────┐
-│  VNStock    │────▶│   Airflow    │────▶│   MinIO     │────▶│  Notebooks   │
-│   API       │     │   (Orchestr) │     │ (Data Lake) │     │  (Analysis)  │
-└─────────────┘     └──────────────┘     └─────────────┘     └──────────────┘
-                           │                     │
-                           │                     │
-                           ▼                     ▼
-                    ┌──────────────┐     ┌─────────────┐
-                    │  PostgreSQL  │     │    Spark    │
-                    │  (Metadata)  │     │ (Transform) │
-                    └──────────────┘     └─────────────┘
+┌─────────────┐     ┌──────────────┐     ┌───────────────────────────┐
+│  VNStock    │────▶│   Airflow    │────▶│   MinIO (Data Lake)       │
+│   API       │     │ (Orchestrate)│     │  Bronze → Silver → Gold   │
+└─────────────┘     └──────┬───────┘     └─────────┬─────────────────┘
+                           │                       │
+                           │ triggers              │ reads
+                           │                       │
+                           ▼                       ▼
+                    ┌──────────────┐        ┌─────────────┐
+                    │    Spark     │────────│   Jupyter   │
+                    │ (Transform)  │        │   Notebook  │
+                    └──────┬───────┘        └─────────────┘
+                           │
+                           │ loads
+                           ▼
+                    ┌──────────────┐        ┌─────────────┐
+                    │  PostgreSQL  │───────▶│  Metabase   │
+                    │ (Warehouse)  │        │ (Analytics) │
+                    └──────────────┘        └─────────────┘
 ```
 
 ### Component Overview
@@ -34,7 +42,58 @@ This document describes the system architecture, component design, and data flow
 
 ## Data Flow
 
-### End-to-End Pipeline
+### Data Pipeline Architecture
+
+```mermaid
+graph LR
+    %% Data Sources
+    API[VNStock API]
+
+    %% Orchestration
+    Airflow{Airflow<br/>Orchestrator}
+
+    %% MinIO Data Lake
+    subgraph MinIO[MinIO Data Lake]
+        Bronze[(Bronze<br/>Raw Data)]
+        Silver[(Silver<br/>Cleaned Data)]
+        Gold[(Gold<br/>Curated Data)]
+    end
+
+    %% Processing
+    Spark[Spark<br/>Transform]
+
+    %% Warehouse
+    PG[(PostgreSQL<br/>Warehouse)]
+
+    %% Analytics
+    Metabase[Metabase<br/>BI Dashboards]
+    Jupyter[Jupyter<br/>Analysis]
+
+    %% Data Flow
+    API -->|Extract| Airflow
+    Airflow -->|Ingest| Bronze
+    Airflow -.->|Trigger| Spark
+    Bronze -->|Read| Spark
+    Spark -->|Write| Silver
+    Silver -->|Load| PG
+    PG --> Metabase
+    Silver -->|S3A| Jupyter
+
+    %% Styling
+    classDef source fill:#e1f5ff
+    classDef orchestrate fill:#fff4e1
+    classDef storage fill:#e8f5e9
+    classDef process fill:#f3e5f5
+    classDef analytics fill:#fce4ec
+    
+    class API source
+    class Airflow orchestrate
+    class Bronze,Silver,Gold storage
+    class Spark process
+    class PG,Metabase,Jupyter analytics
+```
+
+### End-to-End Pipeline Steps
 
 ```
 1. Extract (VNStock API)
@@ -42,20 +101,20 @@ This document describes the system architecture, component design, and data flow
        │
 2. Load to Data Lake (Bronze Layer)
    └─▶ src/pipeline/load/s3.py
-       └─▶ MinIO: /bronze/stock_data/
+       └─▶ MinIO: s3a://dev/data/bronze/vnstock3/
            │
 3. Transform (Silver Layer)
    └─▶ src/pipeline/transform/vnstock.py
-       └─▶ Spark processing
-           └─▶ MinIO: /silver/processed_data/
+       └─▶ Spark processing (PySpark)
+           └─▶ MinIO: s3a://dev/data/silver/vnstock3/
                │
 4. Load to Data Warehouse
    └─▶ src/pipeline/load/postgres.py
-       └─▶ PostgreSQL: analytical tables
+       └─▶ PostgreSQL: analytics database
            │
 5. Visualize & Analyze
    ├─▶ Metabase: Business dashboards
-   └─▶ Jupyter: Ad-hoc analysis
+   └─▶ Jupyter: Ad-hoc analysis with Spark
 ```
 
 ### Medallion Architecture
