@@ -28,7 +28,7 @@ Build a production-ready data engineering solution for Vietnamese stock market a
 
 **Data Ingestion**
 
-- VNStock API integration (stock prices, company info)
+- VNStock data integration (stock prices, company info)
 - Batch extraction with error handling
 - Historical data retrieval
 
@@ -111,18 +111,66 @@ Build a production-ready data engineering solution for Vietnamese stock market a
 
 ## Future Enhancements
 
+### 🛠️ Infrastructure & Development
+*HOW we build and maintain the system - Developer experience, tooling, workflows (Dev-focused)*
+
+- **Dependency Management**: 
+  - Migrate from venv to Poetry for better dependency resolution
+  - Lock file for reproducible builds
+  - Dev dependencies separation
+  - Build and publish workflows
+
+- **Data Ingestion Optimization**:
+  - Investigate and optimize VNStock3 library performance bottlenecks
+  - Implement retry logic and circuit breaker pattern for API failures
+  - Consider direct API integration if library remains unstable
+  - Add connection pooling and request batching
+  - Implement caching layer for frequently accessed data
+
+### 🚀 Features & Capabilities
+*WHAT the system can do - Business value, end-user features, data capabilities (User-focused)*
+
 - **Additional Data Sources**: 
   - Real estate data (property prices, transactions)
   - News and sentiment analysis (financial news, social media)
   - Economic indicators (GDP, inflation, interest rates)
   - International market data (stocks, commodities, forex)
-- **Monitoring**: Custom metrics and alerting
-- **Data Quality**: Validation framework
-- **Testing**: Unit and integration test coverage
-- **Gold Layer**: Business-ready aggregations
-- **Streaming**: Real-time price updates (Kafka)
+
+- **Analytics-Ready Data Models**:
+  - Pre-built fact and dimension tables for common business questions
+  - Standard metrics and KPIs (portfolio performance, market trends, risk indicators)
+  - Self-service analytics layer for BI tools
+  - Curated datasets optimized for analyst workflows
+
+- **Data Quality**: 
+  - Validation framework with Great Expectations
+  - Data profiling and anomaly detection
+  - Schema enforcement and evolution tracking
+
+- **Testing**: 
+  - Unit test coverage for pipeline modules
+  - Integration tests for DAGs
+  - End-to-end pipeline testing
+  - CI/CD pipelines with GitHub Actions
+
+- **Monitoring & Observability**:
+  - Custom metrics and alerting (Prometheus/Grafana)
+  - Pipeline execution tracking
+  - Data lineage visualization
+  - Performance monitoring dashboard
+
+### 🏗️ Architecture & Scale
+*HOW the system handles growth and complexity - Performance, scalability, resilience (System-focused)*
+
+- **Data Modeling & Gold Layer**: 
+  - Dimensional modeling for analytics (star/snowflake schema)
+  - Business-ready aggregations and metrics
+  - Multi-source data integration modeling
+  - Slowly Changing Dimensions (SCD) implementation
+  - Data warehouse optimization for query performance
+- **Streaming**: Real-time price updates with Kafka
 - **ML**: Predictive models and feature engineering
-- **Cloud**: AWS/Azure deployment
+- **Cloud**: AWS/Azure deployment with Terraform/IaC
 
 ---
 
