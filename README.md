@@ -50,7 +50,7 @@ Once services are running, you can access:
 
 ![Docker Services](docs/image/docker_services.png)
 
-### Running the Pipelines
+#### Running the Pipelines
 
 **Data Ingestion Pipeline:**
 
@@ -60,13 +60,21 @@ Once services are running, you can access:
 
 ![Airflow Transform DAG](docs/image/airflow_vnstock_transform.png)
 
+#### Data Storage & Management
+
 **MinIO Data Lake:**
 
 ![MinIO Console](docs/image/minio.png)
 
-**Jupyter Lab for Analysis:**
+#### Data Analysis & Visualization
+
+**Jupyter Lab for Exploratory Analysis:**
 
 ![Jupyter Lab](docs/image/jupyter_lab.png)
+
+**Metabase Dashboards for Business Intelligence:**
+
+![Metabase Dashboard](docs/image/metabase.png)
 
 For detailed setup instructions, environment configuration, and development workflow, see [`docs/developer_guide.md`](docs/developer_guide.md).
 
