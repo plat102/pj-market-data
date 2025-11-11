@@ -1,0 +1,57 @@
+graph LR
+    %% ========= Data Sources ========= %%
+    subgraph DS[Data Source]
+        API[VNStock API]
+    end
+
+    %% ========= Ingest Layer ========= %%
+    subgraph Ingest
+        Extract[Python Extract]
+    end
+
+    %% ========= Object Storage (MinIO) ========= %%
+    subgraph ObjectStorage[MinIO Object Storage]
+        Bronze[[🏗️ Bronze Layer]]
+        Silver[[⚙️ Silver Layer]]
+        Gold[[💎 Gold Layer]]
+    end
+
+    %% ========= Processing ========= %%
+    subgraph Processing
+        Spark[Apache Spark ETL/Transform]
+    end
+
+    %% ========= Serving ========= %%
+    subgraph Serving
+        PG[(PostgreSQL Data Warehouse)]
+    end
+
+    %% ========= Data Consumers ========= %%
+    subgraph Consumers
+        Metabase[Metabase BI]
+        Jupyter[Jupyter Analysis]
+    end
+
+    %% ========= Orchestration ========= %%
+    subgraph Orchestration
+        Airflow[Apache Airflow]
+    end
+
+    %% ========= Data Flow ========= %%
+    API -->|Airflow schedules| Extract
+    Extract -->|Raw JSON| Bronze
+    Bronze -->|Spark cleans & joins| Spark
+    Spark -->|Processed data| Silver
+    Silver -->|Aggregates & curated| Spark
+    Spark -->|Final datasets| Gold
+    Gold -->|Load| PG
+    PG --> Metabase
+    Silver --> Jupyter
+
+    %% ========= Orchestration Control Flow ========= %%
+    Airflow -.-> Extract
+    Airflow -.-> Bronze
+    Airflow -.-> Spark
+    Airflow -.-> Silver
+    Airflow -.-> Gold
+    Airflow -.-> PG
