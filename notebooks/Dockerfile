@@ -1,38 +1,37 @@
-FROM jupyter/all-spark-notebook:python-3.10
+FROM jupyter/pyspark-notebook:lab-3.3.4
 
 USER root
 
-# 3.3.4: https://archive.apache.org/dist/spark/spark-3.3.4/spark-3.3.4-bin-hadoop3.tgz
-# 3.5.3 curl -O https://dlcdn.apache.org/spark/spark-3.5.3/spark-3.5.3-bin-hadoop3.tgz \
+# Backup Spark cũ
+RUN mv /usr/local/spark /usr/local/spark-old
 
-# Download and install Apache Spark
-RUN curl -O https://archive.apache.org/dist/spark/spark-3.3.4/spark-3.3.4-bin-hadoop3.tgz \
-    && tar zxvf spark-3.3.4-bin-hadoop3.tgz \
-    && rm -rf spark-3.3.4-bin-hadoop3.tgz \
-    && mv spark-3.3.4-bin-hadoop3/ /usr/local/ \
-    && rm -rf /usr/local/spark \
-    && rm -rf /usr/local/spark-3.3.0-bin-hadoop3 \
-    && ln -s /usr/local/spark-3.3.4-bin-hadoop3 /usr/local/spark
+# Download Spark 3.3.4 using wget
+RUN wget https://archive.apache.org/dist/spark/spark-3.3.4/spark-3.3.4-bin-hadoop3.tgz \
+    && tar xzf spark-3.3.4-bin-hadoop3.tgz \
+    && mv spark-3.3.4-bin-hadoop3 /usr/local/spark-3.3.4-bin-hadoop3 \
+    && ln -s /usr/local/spark-3.3.4-bin-hadoop3 /usr/local/spark \
+    && rm spark-3.3.4-bin-hadoop3.tgz
 
-# Download required JAR files for AWS SDK and Delta Lake
-RUN curl -O https://repo1.maven.org/maven2/software/amazon/awssdk/s3/2.18.41/s3-2.18.41.jar \
-    && curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk/1.12.367/aws-java-sdk-1.12.367.jar \
-    && curl -O https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.1026/aws-java-sdk-bundle-1.11.1026.jar \
-    && curl -O https://repo1.maven.org/maven2/io/delta/delta-core_2.12/2.2.0/delta-core_2.12-2.2.0.jar \
-    && curl -O https://repo1.maven.org/maven2/io/delta/delta-storage/2.2.0/delta-storage-2.2.0.jar \
-    && curl -O https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar \
-    && curl -O https://repo1.maven.org/maven2/org/postgresql/postgresql/42.5.0/postgresql-42.5.0.jar \
-    && mv s3-2.18.41.jar /usr/local/spark/jars \
-    && mv aws-java-sdk-1.12.367.jar /usr/local/spark/jars \
-    && mv aws-java-sdk-bundle-1.11.1026.jar /usr/local/spark/jars \
-    && mv delta-core_2.12-2.2.0.jar /usr/local/spark/jars \
-    && mv delta-storage-2.2.0.jar /usr/local/spark/jars \
-    && mv hadoop-aws-3.3.4.jar /usr/local/spark/jars \
-    && mv postgresql-42.5.0.jar /usr/local/spark/jars
+# Update SPARK_HOME
+ENV SPARK_HOME=/usr/local/spark
+ENV PATH=$PATH:$SPARK_HOME/bin:$SPARK_HOME/sbin
+ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9.5-src.zip:$PYTHONPATH
 
-# Clean up to reduce image size (optional)
-# RUN rm -rf /usr/local/spark-3.3.0-bin-hadoop3
+# Copy JARs from local (except AWS SDK bundle which will be downloaded)
+COPY jars/*.jar /usr/local/spark/jars/
 
-# Install Python packages
-RUN pip install --upgrade pip \
-    && pip install python-dotenv \
+# Download AWS SDK bundle inside container (full 268MB version)
+RUN cd /usr/local/spark/jars && \
+    rm -f aws-java-sdk-bundle*.jar && \
+    wget -q https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar
+
+# Upgrade pyspark to match Spark version
+RUN pip install --no-cache-dir --upgrade pyspark==3.3.4 python-dotenv
+
+# Fix permissions
+RUN fix-permissions /usr/local/spark && \
+    fix-permissions /home/$NB_USER
+
+USER $NB_UID
+
+WORKDIR /home/$NB_USER/work

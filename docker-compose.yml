@@ -1,5 +1,3 @@
-version: '3.9'
-
 networks:
   spark_network:
     driver: bridge 
@@ -156,22 +154,24 @@ services:
     build:
       context: ./notebooks
       dockerfile: ./Dockerfile
-    container_name: "spark-notebook"
-    user: root
+    container_name: spark-notebook
+    restart: unless-stopped
     environment:
-      - JUPYTER_ENABLE_LAB="yes"
-      - GRANT_SUDO="yes"
+      - JUPYTER_ENABLE_LAB=yes
+      - GRANT_SUDO=yes
+      - SPARK_HOME=/usr/local/spark
     env_file:
       - ./spark.env
     volumes:
       - ./notebooks/work:/home/jovyan/work
       - ./notebooks/spark-defaults.conf:/usr/local/spark/conf/spark-defaults.conf
-      # - ./spark/jars:/usr/local/spark/jars
     ports:
       - "8888:8888"
       - "4040:4040"
     networks:
       - spark_network
+    depends_on:
+      - minio
 
   metabase:
     container_name: metabase

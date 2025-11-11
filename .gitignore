@@ -191,3 +191,6 @@ __pycache__/
 /spark/jars/*
 
 /postgresql/data/*
+
+airflow/logs/scheduler/latest
+notebooks/jars/*

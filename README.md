@@ -41,9 +41,11 @@ Once services are running, you can access:
 | Service | URL | Port | Credentials |
 |---------|-----|------|-------------|
 | **Airflow Webserver** | http://localhost:8081 | 8081 | user: `airflow`, pass: `airflow` |
+| **Jupyter Lab** | http://localhost:8888 | 8888 | Check logs for token: `docker-compose logs spark-notebook` |
 | **MinIO Console** | http://localhost:9001 | 9001 | user: `minio`, pass: `minio123` |
 | **Metabase** | http://localhost:3000 | 3000 | Setup on first access |
-| **Spark Master** | http://localhost:8080 | 8080 | N/A |
+| **Spark Master UI** | http://localhost:8080 | 8080 | N/A |
+| **Spark Application UI** | http://localhost:4040 | 4040 | N/A (Active when Spark job is running) |
 | **PostgreSQL** | localhost:5433 | 5433 | user: `airflow`, pass: `airflow` |
 
 ![Docker Services](docs/image/docker_services.png)
@@ -61,6 +63,10 @@ Once services are running, you can access:
 **MinIO Data Lake:**
 
 ![MinIO Console](docs/image/minio.png)
+
+**Jupyter Lab for Analysis:**
+
+![Jupyter Lab](docs/image/jupyter_lab.png)
 
 For detailed setup instructions, environment configuration, and development workflow, see [`docs/developer_guide.md`](docs/developer_guide.md).
 

@@ -1,0 +1,6 @@
+# Ignore AWS SDK bundle - will be downloaded during build
+jars/aws-java-sdk-bundle*.jar
+
+# Ignore work directory contents
+work/*
+!work/.gitkeep
